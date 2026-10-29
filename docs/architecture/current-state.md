@@ -13,13 +13,13 @@
 graph TD
     Client[HTTP Client: Port 8000] -->|ASGI HTTP Request| AppService[FastAPI Application: oms_source_app]
     
-    subgraph Host Infrastructure: Linux Server
+    subgraph Host_Server [Host Infrastructure: Linux Server]
         AppService -->|SQLAlchemy Connection Pool: Port 5432| DBService[(PostgreSQL 16: oms_source_db)]
         DBService -->|Direct Block I/O: Mount /var/lib/postgresql/data| DataVolume[(Named Docker Volume: oms_source_pgdata)]
         OpsTooling[Backup Automation: pg_dump] -.->|Direct Binary Stream| DBService
     end
 
-    subgraph Storage Subsystem
+    subgraph Storage_Subsystem [Storage Subsystem]
         OpsTooling --> BackupStorage[Local Backup Archive: backups/*.dump]
     end
 Layer Specifications Matrix
