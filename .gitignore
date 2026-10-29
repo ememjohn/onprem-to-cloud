@@ -1,0 +1,23 @@
+# Secrets and environment files
+.env
+*.env
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# Database dumps
+*.dump
+*.sql.gz
