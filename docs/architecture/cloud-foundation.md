@@ -51,6 +51,6 @@ graph TD
 ## Security Group Defense in Depth Matrix
 | Security Group Identifier | Ingress Source | Allowed Ports / Protocols | Egress Target | Operational Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| apex-oms-dev-alb-sg | 0.0.0.0/0 (Public Internet) | Port 80 (HTTP), Port 443 (HTTPS) | All Traffic (0.0.0.0/0) | Public load balancer traffic termination |
-| apex-oms-dev-app-sg | apex-oms-dev-alb-sg (SG Reference) | Port 8000 (ASGI Application) | All Traffic (0.0.0.0/0) | Application instances protected from direct web scans |
-| apex-oms-dev-db-sg | apex-oms-dev-app-sg (SG Reference) | Port 5432 (PostgreSQL) | Denied (No Outbound Egress) | Managed database protected from compute compromises |
+| sabay-bank-dev-alb-sg | 0.0.0.0/0 (Public Internet) | Port 80 (HTTP), Port 443 (HTTPS) | All Traffic (0.0.0.0/0) | Public load balancer traffic termination |
+| sabay-bank-dev-app-sg | sabay-bank-dev-alb-sg (SG Reference) | Port 8000 (ASGI Application) | All Traffic (0.0.0.0/0) | Application instances protected from direct web scans |
+| sabay-bank-dev-db-sg | sabay-bank-dev-app-sg (SG Reference) | Port 5432 (PostgreSQL) | Denied (No Outbound Egress) | Managed database protected from compute compromises |

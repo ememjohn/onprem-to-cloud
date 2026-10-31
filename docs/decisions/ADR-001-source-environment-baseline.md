@@ -7,7 +7,7 @@ Source Environment Architecture and Baseline Stack Selection
 Accepted
 
 ## Context
-Apex Retail Services operates an internal Order Management System. The current production setup runs on an on premises Linux server. The business intends to migrate this workload to AWS to improve reliability and prepare for microservices modernization. Before planning any cloud infrastructure, engineering must construct a reproducible local replica of the source environment. This replica allows us to benchmark response times, prove data persistence, establish baseline backups, and test replication mechanisms without risking business operations.
+Sabay Premium Bank operates an internal Order Management System. The current production setup runs on an on premises Linux server. The business intends to migrate this workload to AWS to improve reliability and prepare for microservices modernization. Before planning any cloud infrastructure, engineering must construct a reproducible local replica of the source environment. This replica allows us to benchmark response times, prove data persistence, establish baseline backups, and test replication mechanisms without risking business operations.
 
 ## Decision
 We select the following baseline architecture:

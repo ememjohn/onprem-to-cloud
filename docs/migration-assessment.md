@@ -1,7 +1,7 @@
 # Workload Migration Assessment and Target Cloud Architecture
 
 ## 1. Executive Summary
-This document establishes the technical assessment and cloud replatforming design for the Apex Retail Order Management System. The assessment categorizes application components into stateful and stateless subsystems, evaluates network dependencies, and details the target architecture within a dedicated Amazon Web Services Virtual Private Cloud.
+This document establishes the technical assessment and cloud replatforming design for the Sabay Premium Bank Core Ledger System. The assessment categorizes application components into stateful and stateless subsystems, evaluates network dependencies, and details the target architecture within a dedicated Amazon Web Services Virtual Private Cloud.
 
 ## 2. Workload Component Decomposition
 | Component Identifier | Tier Classification | State Classification | Migration Target | Target Runtime Justification |

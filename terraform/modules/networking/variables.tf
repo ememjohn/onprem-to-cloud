@@ -13,7 +13,7 @@ variable "environment" {
 variable "project_name" {
   description = "Project identifier for resource tagging"
   type        = string
-  default     = "apex-oms"
+  default     = "sabay-bank"
 }
 
 variable "availability_zones" {

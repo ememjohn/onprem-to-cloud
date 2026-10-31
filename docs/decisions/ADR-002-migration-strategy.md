@@ -7,7 +7,7 @@ Cloud Migration Strategy, Tooling Selection, and Target Architecture Pattern
 Accepted
 
 ## Context
-Apex Retail Services operates an internal Order Management System running on a single on premises Linux server. The business requires migration to Amazon Web Services to achieve high availability, eliminate hardware failure risk, automate database management, and establish a foundation for microservices modernization. The engineering team must select an infrastructure as code engine, a target compute strategy, and a database migration methodology that balance operational risk, business continuity, and execution speed.
+Sabay Premium Bank operates an internal Order Management System running on a single on premises Linux server. The business requires migration to Amazon Web Services to achieve high availability, eliminate hardware failure risk, automate database management, and establish a foundation for microservices modernization. The engineering team must select an infrastructure as code engine, a target compute strategy, and a database migration methodology that balance operational risk, business continuity, and execution speed.
 
 ## Decision Drivers
 1. Minimize Business Downtime: The order intake pipeline cannot tolerate multi hour maintenance windows.
