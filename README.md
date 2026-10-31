@@ -8,8 +8,8 @@ This repository contains the end to end engineering artifacts for migrating an o
 | :--- | :--- | :--- | :--- |
 | Phase 1 | Source Baseline | Docker Compose environment, persistent volumes, backup verification | COMPLETED |
 | Phase 2 | Migration Assessment | 6 Rs migration strategy, RTO RPO definitions, DMS analysis | IN PROGRESS |
-| Phase 3 | AWS Infrastructure | Terraform VPC, private subnets, security groups, IAM policies | PENDING |
-| Phase 4 | Target Deployment | EC2 application instance, Amazon RDS PostgreSQL cluster | PENDING |
+| Phase 3 | AWS Infrastructure | Terraform VPC, private subnets, security groups, IAM policies | COMPLETED |
+| Phase 4 | Target Deployment | EC2 application instance, Amazon RDS PostgreSQL cluster | COMPLETED |
 | Phase 5 | Data Replication | AWS DMS full load plus Change Data Capture (CDC) replication | PENDING |
 | Phase 6 | Cutover and Rollback | Traffic migration rehearsal, DNS cutover, rollback criteria | PENDING |
 | Phase 7 | Cloud Observability | Amazon CloudWatch logs, error alarms, system metrics | PENDING |
