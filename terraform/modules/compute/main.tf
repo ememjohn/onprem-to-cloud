@@ -71,11 +71,11 @@ locals {
 resource "aws_instance" "app_host" {
   ami                  = data.aws_ami.amazon_linux_2023.id
   instance_type        = var.instance_type
-  subnet_id            = var.private_subnet_id
+  subnet_id            = var.public_subnet_ids[0]
   iam_instance_profile = aws_iam_instance_profile.app_profile.name
 
   vpc_security_group_ids      = [var.app_security_group_id]
-  associate_public_ip_address = false
+  associate_public_ip_address = true
 
   user_data = local.user_data
 

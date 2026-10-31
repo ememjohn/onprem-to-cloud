@@ -16,13 +16,8 @@ variable "vpc_id" {
 }
 
 variable "public_subnet_ids" {
-  description = "List of public subnet IDs for the Application Load Balancer"
+  description = "List of public subnet IDs for ALB and App host"
   type        = list(string)
-}
-
-variable "private_subnet_id" {
-  description = "Private subnet ID where the EC2 application instance resides"
-  type        = string
 }
 
 variable "alb_security_group_id" {

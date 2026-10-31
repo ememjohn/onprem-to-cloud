@@ -56,7 +56,6 @@ module "compute" {
   environment           = var.environment
   vpc_id                = module.networking.vpc_id
   public_subnet_ids     = module.networking.public_subnet_ids
-  private_subnet_id     = module.networking.private_app_subnet_ids[0]
   alb_security_group_id = module.networking.alb_security_group_id
   app_security_group_id = module.networking.app_security_group_id
   instance_type         = "t3.small"
