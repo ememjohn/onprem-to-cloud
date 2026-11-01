@@ -7,14 +7,14 @@ Source Environment Architecture and Baseline Stack Selection
 Accepted
 
 ## Context
-Sabay Premium Bank operates an internal Order Management System. The current production setup runs on an on premises Linux server. The business intends to migrate this workload to AWS to improve reliability and prepare for microservices modernization. Before planning any cloud infrastructure, engineering must construct a reproducible local replica of the source environment. This replica allows us to benchmark response times, prove data persistence, establish baseline backups, and test replication mechanisms without risking business operations.
+Sabay Premium Bank operates an internal Core Banking Ledger System. The current production setup runs on an on premises Linux server. The business intends to migrate this workload to AWS to improve reliability and prepare for microservices modernization. Before planning any cloud infrastructure, engineering must construct a reproducible local replica of the source environment. This replica allows us to benchmark response times, prove data persistence, establish baseline backups, and test replication mechanisms without risking business operations.
 
 ## Decision
 We select the following baseline architecture:
 1. Application Runtime: Python 3.12 with FastAPI. FastAPI provides strict schema validation through Pydantic, asynchronous performance, and standard OpenAPI documentation.
 2. Database Engine: PostgreSQL 16 on Linux Alpine. PostgreSQL gives us enterprise relational guarantees, ACID compliance, and standard write ahead log replication capabilities required for AWS Database Migration Service.
 3. Compute Orchestration: Docker Compose with a dedicated bridge network.
-4. Storage Strategy: Named Docker volume named oms_source_pgdata. Database files reside on the host disk independently of container lifecycle events.
+4. Storage Strategy: Named Docker volume named bank_source_pgdata. Database files reside on the host disk independently of container lifecycle events.
 
 ## Alternatives Considered
 1. SQLite: Rejected because SQLite lacks network daemon capabilities, connection pooling, and AWS Database Migration Service change data capture support.

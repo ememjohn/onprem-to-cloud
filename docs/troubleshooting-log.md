@@ -3,7 +3,7 @@
 ## Incident Summary Matrix
 | Incident Reference | Root Cause Category | Impacted Subsystem | Resolution Time | Final Status |
 | :--- | :--- | :--- | :--- | :--- |
-| INC-BOOT-01 | Missing Runtime Python Dependency | Application Container (oms_source_app) | 5 Minutes | Resolved |
+| INC-BOOT-01 | Missing Runtime Python Dependency | Application Container (bank_source_app) | 5 Minutes | Resolved |
 | INC-DUMP-02 | Pseudo TTY Binary Stream Corruption | Storage Restoration Pipeline (pg_restore) | 10 Minutes | Resolved |
 
 ## Detailed Post Mortem: INC-BOOT-01
