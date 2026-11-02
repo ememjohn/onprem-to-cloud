@@ -14,7 +14,7 @@ This repository contains the production engineering artifacts for migrating the 
 | Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, rollback execution | COMPLETED |
 | Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | COMPLETED |
 | Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | COMPLETED |
-| Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS deployment | PENDING |
+| Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS deployment | COMPLETED |
 | Phase 10 | Disaster Recovery | Multi Region cross replication, failover rehearsal, RTO validation | PENDING |
 | Phase 11 | Portfolio Master Report | Comprehensive technical case study report and end to end topology | PENDING |
 
@@ -42,6 +42,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **ADR 005** | Database Replication Methodology | AWS DMS Full Load and CDC vs Native Snapshot Pipe | Cryptographic snapshot pipeline and sequence alignment | [View Record](docs/decisions/ADR-005-database-migration-strategy.md) |
 | **ADR 006** | Observability Architecture | Native CloudWatch vs Standalone Splunk SIEM Cluster | Native CloudWatch Alarms with SIEM Firehose Streaming | [View Record](docs/decisions/ADR-006-observability-tooling-cloudwatch-vs-splunk.md) |
 | **ADR 007** | Server Migration Methodology | AWS MGN Block Rehosting vs Automated Container Rebuild | Clean Container Rebuilding with Terraform | [View Record](docs/decisions/ADR-007-mgn-feasibility.md) |
+| **ADR 008** | Modernization Architecture | Modular Monolith vs ECS Fargate vs Amazon EKS | Managed Kubernetes on Amazon EKS with HPA | [View Record](docs/decisions/ADR-008-modernization-eks-vs-modular-monolith.md) |
 
 ## Repository Technical Documentation Matrices
 
@@ -51,6 +52,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **Baseline Architecture Specification** | On Premises Source | Single host Linux Docker Compose topology and persistence model | [Open Specification](docs/architecture/current-state.md) |
 | **Cloud Foundation Specification** | AWS Landing Zone | Multi tier VPC, dual AZ subnets, route tables, and security groups | [Open Specification](docs/architecture/cloud-foundation.md) |
 | **Workload Migration Assessment** | Migration Planning | Stateless vs stateful decomposition, RTO and RPO targets | [Open Assessment](docs/migration-assessment.md) |
+| **Modernized Architecture Specification** | Kubernetes Modernization | Amazon EKS cluster architecture, pod boundaries, HPA scaling | [Open Specification](docs/architecture/modernized-state.md) |
 | **Security Architecture Review** | Compliance and Hardening | Zero open port 22 audit, private RDS isolation, secrets protection | [Open Audit](docs/security-review.md) |
 
 ### Operational Runbooks and Production Incident Analysis
