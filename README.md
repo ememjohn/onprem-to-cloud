@@ -3,19 +3,58 @@
 ## Executive Summary
 This repository contains the production engineering artifacts for migrating the core transaction and account settlement ledger of Sabay Premium Bank from an on premises Linux environment to Amazon Web Services. The project establishes an enterprise migration model: verifying local persistence and disaster recovery baselines, replatforming compute and database engines to AWS with zero open administrative ports, executing automated continuous data replication, and modernizing the monolithic ledger into event driven microservices on Kubernetes.
 
+## Master Cloud Architecture Blueprint
+
+```mermaid
+graph TD
+    ClientIngress[Public Client and Interbank Ingress] --> CloudPerimeter[AWS Internet Gateway]
+    CloudPerimeter --> PublicALB[Application Load Balancer: Dual AZ Ingress]
+
+    subgraph AWS_Landing_Zone [Custom AWS VPC eu-north-1: 10.0.0.0/16]
+        subgraph Public_Tier [Public Ingress Subnet Tier]
+            PublicALB
+        end
+
+        subgraph Compute_Tier [Application Compute Tier]
+            EC2_Rehost[Phase 4 Target: Rehosted EC2 Instance via AWS Systems Manager]
+            EKS_Modernized[Phase 9 Target: Amazon EKS Kubernetes Cluster]
+        end
+
+        subgraph Persistence_Tier [Isolated Database Subnet Tier: No Internet Access]
+            RDS_Postgres[(Amazon RDS PostgreSQL 16.10: Encrypted gp3 Multi AZ Subnet Group)]
+        end
+    end
+
+    subgraph On_Premises_Source [Phase 1 Source Environment: On Premises Linux Server]
+        SourceApp[FastAPI Ledger Core] --> SourceDB[(PostgreSQL 16: Local Volume)]
+    end
+
+    subgraph Security_and_Telemetry [AWS Governance and SRE Layer]
+        SSM[AWS Systems Manager Session Manager: Port 22 Closed]
+        CloudWatch[Amazon CloudWatch Alarms: 5XX Errors and Connection Drops]
+        SecretsMgr[AWS Secrets Manager: Dynamic Credential Rotation]
+    end
+
+    PublicALB -->|Ingress Port 8000| EC2_Rehost
+    PublicALB -->|Ingress Ingress Controller| EKS_Modernized
+    EC2_Rehost -->|Private Socket Port 5432 with SSL| RDS_Postgres
+    EKS_Modernized -->|Private Socket Port 5432 with SSL| RDS_Postgres
+    SourceDB -.->|Cryptographic Snapshot Migration| RDS_Postgres
+```
+
 ## Phase Delivery Roadmap
-| Phase | Focus Area | Primary Engineering Deliverable | Current Status |
+| Phase | Focus Area | Primary Engineering Deliverable | Delivery Status |
 | :--- | :--- | :--- | :--- |
 | Phase 1 | Source Baseline | Docker Compose environment, persistent volumes, binary backup verification | COMPLETED |
 | Phase 2 | Migration Assessment | Workload decomposition, RTO and RPO targets, target VPC design | COMPLETED |
 | Phase 3 | AWS Infrastructure | Terraform multi tier VPC, private subnets, security groups, IAM roles | COMPLETED |
 | Phase 4 | Target Deployment | EC2 compute, Amazon RDS PostgreSQL 16.10, ALB, network isolation | COMPLETED |
-| Phase 5 | Data Replication | AWS DMS initial full load plus continuous Change Data Capture replication | COMPLETED |
-| Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, rollback execution | COMPLETED |
+| Phase 5 | Data Replication | Database snapshot migration with SSL, sequence sync, SHA-256 validation | COMPLETED |
+| Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, reverse data reconciliation | COMPLETED |
 | Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | COMPLETED |
 | Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | COMPLETED |
-| Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS deployment | COMPLETED |
-| Phase 10 | Disaster Recovery | Multi Region cross replication, failover rehearsal, RTO validation | COMPLETED |
+| Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS manifests, HPA | COMPLETED |
+| Phase 10 | Disaster Recovery | Multi Region cross replication plan, failover rehearsal, RTO validation | COMPLETED |
 | Phase 11 | Portfolio Master Report | Comprehensive technical case study report and end to end topology | COMPLETED |
 
 ## Core Banking Technology Matrix
@@ -29,7 +68,7 @@ This repository contains the production engineering artifacts for migrating the 
 | Target Cloud Database | Amazon RDS for PostgreSQL 16.10 | Managed multi AZ ready database with automated point in time recovery |
 | Public Ingress Controller | Application Load Balancer (ALB) | Dual availability zone ingress with active health check routing |
 | Secrets Protection | AWS Secrets Manager | Encrypted dynamic credential storage with zero plaintext commits |
-| Data Migration Pipeline | AWS Database Migration Service (DMS) | Initial bulk data transfer followed by continuous logical CDC sync |
+| Data Migration Pipeline | Cryptographic Snapshot and DMS Pattern | Bulk data transfer, sequence realignment, and SHA-256 checksum audit |
 | Target Modernization Engine | Amazon EKS (Kubernetes) | Containerized microservices scaling ledger processing independently |
 
 ## Architecture Decision Records (ADRs)
@@ -41,7 +80,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **ADR 004** | Managed Persistence Replatforming | Self Managed EC2 PostgreSQL vs Amazon RDS | Managed Amazon RDS PostgreSQL with automated PITR | [View Record](docs/decisions/ADR-004-managed-rds-postgresql.md) |
 | **ADR 005** | Database Replication Methodology | AWS DMS Full Load and CDC vs Native Snapshot Pipe | Cryptographic snapshot pipeline and sequence alignment | [View Record](docs/decisions/ADR-005-database-migration-strategy.md) |
 | **ADR 006** | Observability Architecture | Native CloudWatch vs Standalone Splunk SIEM Cluster | Native CloudWatch Alarms with SIEM Firehose Streaming | [View Record](docs/decisions/ADR-006-observability-tooling-cloudwatch-vs-splunk.md) |
-| **ADR 007** | Server Migration Methodology | AWS MGN Block Rehosting vs Automated Container Rebuild | Clean Container Rebuilding with Terraform | [View Record](docs/decisions/ADR-007-mgn-feasibility.md) |
+| **ADR 007** | Server Migration Methodology | AWS MGN Block Rehosting vs Container Rebuild | Clean Container Rebuilding with Terraform | [View Record](docs/decisions/ADR-007-mgn-feasibility.md) |
 | **ADR 008** | Modernization Architecture | Modular Monolith vs ECS Fargate vs Amazon EKS | Managed Kubernetes on Amazon EKS with HPA | [View Record](docs/decisions/ADR-008-modernization-eks-vs-modular-monolith.md) |
 | **ADR 009** | Disaster Recovery Strategy | Backup/Restore vs Pilot Light vs Active/Active | Pilot Light with Amazon RDS Cross Region Read Replica | [View Record](docs/decisions/ADR-009-disaster-recovery-strategy.md) |
 
@@ -53,16 +92,16 @@ This repository contains the production engineering artifacts for migrating the 
 | **Baseline Architecture Specification** | On Premises Source | Single host Linux Docker Compose topology and persistence model | [Open Specification](docs/architecture/current-state.md) |
 | **Cloud Foundation Specification** | AWS Landing Zone | Multi tier VPC, dual AZ subnets, route tables, and security groups | [Open Specification](docs/architecture/cloud-foundation.md) |
 | **Workload Migration Assessment** | Migration Planning | Stateless vs stateful decomposition, RTO and RPO targets | [Open Assessment](docs/migration-assessment.md) |
-| **Modernized Architecture Specification** | Kubernetes Modernization | Amazon EKS cluster architecture, pod boundaries, HPA scaling | [Open Specification](docs/architecture/modernized-state.md) |
 | **Security Architecture Review** | Compliance and Hardening | Zero open port 22 audit, private RDS isolation, secrets protection | [Open Audit](docs/security-review.md) |
+| **Modernized Architecture Specification** | Kubernetes Modernization | Amazon EKS cluster architecture, pod boundaries, HPA scaling | [Open Specification](docs/architecture/modernized-state.md) |
 | **Disaster Recovery Plan** | Business Continuity | Multi Region failover plan, RTO and RPO targets, and failback SOP | [Open Plan](docs/disaster-recovery-plan.md) |
 
 ### Operational Runbooks and Production Incident Analysis
 | Operational Document | Operational Domain | Practical Value and Scope | Direct Access |
 | :--- | :--- | :--- | :--- |
 | **Engineering Incident Post Mortems** | SRE and Failure Analysis | Root cause analyses and exact code fixes for 7 production crashes | [Open Post Mortems](docs/troubleshooting-log.md) |
-| **Cloud Operations Runbook** | Site Reliability Engineering | SOP for handling ALB 5XX alerts and database connection drops | [Open Runbook](docs/operations-runbook.md) |
 | **Source Environment Runbook** | Operations SOP | Command reference for building, testing, backing up, and restoring | [Open Runbook](docs/source-environment-runbook.md) |
+| **Cloud Operations Runbook** | Site Reliability Engineering | SOP for handling ALB 5XX alerts and database connection drops | [Open Runbook](docs/operations-runbook.md) |
 | **Project Delivery Status Tracker** | Governance and Milestones | Real time phase sign offs and completion evidence across all phases | [Open Status](docs/project-status.md) |
 
 ### Migration Execution Reports and Validation Evidence
@@ -71,5 +110,5 @@ This repository contains the production engineering artifacts for migrating the 
 | **Baseline Verification Metrics** | Source QA Testing | Automated test results and deterministic 3 customer / 5 transaction catalog | [Open Metrics](docs/baseline-metrics.md) |
 | **Database Migration Report** | Persistence Migration | PostgreSQL 16.10 replatforming, SSL enforcement, sequence sync | [Open Report](docs/database-migration-report.md) |
 | **Cutover and Rollback Execution Report** | Business Continuity | Maintenance window execution, traffic switch, and data reconciliation | [Open Report](docs/cutover-report.md) |
-| **Master Portfolio Case Study Report** | Executive Retrospective | Complete 11 phase retrospective, master topology, and FinOps audit | [Open Master Report](docs/master-portfolio-report.md) |
 | **Server Migration Feasibility Assessment** | Rehosting Strategy | AWS MGN block level replication evaluation vs container rebuilding | [Open Assessment](docs/mgn-feasibility-assessment.md) |
+| **Master Portfolio Case Study Report** | Executive Retrospective | Complete 11 phase retrospective, master topology, and FinOps audit | [Open Master Report](docs/master-portfolio-report.md) |
