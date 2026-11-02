@@ -11,7 +11,7 @@ This repository contains the production engineering artifacts for migrating the 
 | Phase 3 | AWS Infrastructure | Terraform multi tier VPC, private subnets, security groups, IAM roles | COMPLETED |
 | Phase 4 | Target Deployment | EC2 compute, Amazon RDS PostgreSQL 16.10, ALB, network isolation | COMPLETED |
 | Phase 5 | Data Replication | AWS DMS initial full load plus continuous Change Data Capture replication | COMPLETED |
-| Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, rollback execution | PENDING |
+| Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, rollback execution | COMPLETED |
 | Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | PENDING |
 | Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | PENDING |
 | Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS deployment | PENDING |
@@ -52,4 +52,5 @@ This repository contains the production engineering artifacts for migrating the 
 6. Engineering Incident Post Mortem Report: `docs/troubleshooting-log.md`
 7. Source Environment Operational Runbook: `docs/source-environment-runbook.md`
 8. Database Migration and Parity Report: `docs/database-migration-report.md`
+9. Cutover and Rollback Execution Report: `docs/cutover-report.md`
 9. Project Phase Status Tracker: `docs/project-status.md`
