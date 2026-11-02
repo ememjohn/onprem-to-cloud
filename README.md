@@ -13,7 +13,7 @@ This repository contains the production engineering artifacts for migrating the 
 | Phase 5 | Data Replication | AWS DMS initial full load plus continuous Change Data Capture replication | COMPLETED |
 | Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, rollback execution | COMPLETED |
 | Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | COMPLETED |
-| Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | PENDING |
+| Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | COMPLETED |
 | Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS deployment | PENDING |
 | Phase 10 | Disaster Recovery | Multi Region cross replication, failover rehearsal, RTO validation | PENDING |
 | Phase 11 | Portfolio Master Report | Comprehensive technical case study report and end to end topology | PENDING |
@@ -41,6 +41,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **ADR 004** | Managed Persistence Replatforming | Self Managed EC2 PostgreSQL vs Amazon RDS | Managed Amazon RDS PostgreSQL with automated PITR | [View Record](docs/decisions/ADR-004-managed-rds-postgresql.md) |
 | **ADR 005** | Database Replication Methodology | AWS DMS Full Load and CDC vs Native Snapshot Pipe | Cryptographic snapshot pipeline and sequence alignment | [View Record](docs/decisions/ADR-005-database-migration-strategy.md) |
 | **ADR 006** | Observability Architecture | Native CloudWatch vs Standalone Splunk SIEM Cluster | Native CloudWatch Alarms with SIEM Firehose Streaming | [View Record](docs/decisions/ADR-006-observability-tooling-cloudwatch-vs-splunk.md) |
+| **ADR 007** | Server Migration Methodology | AWS MGN Block Rehosting vs Automated Container Rebuild | Clean Container Rebuilding with Terraform | [View Record](docs/decisions/ADR-007-mgn-feasibility.md) |
 
 ## Repository Technical Documentation Matrices
 
