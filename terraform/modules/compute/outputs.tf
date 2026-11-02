@@ -22,3 +22,13 @@ output "target_group_arn" {
   description = "ARN of the application Target Group"
   value       = aws_lb_target_group.app_tg.arn
 }
+
+output "alb_arn_suffix" {
+  description = "ARN Suffix of the Application Load Balancer"
+  value       = aws_lb.external.arn_suffix
+}
+
+output "target_group_arn_suffix" {
+  description = "ARN Suffix of the Target Group"
+  value       = aws_lb_target_group.app_tg.arn_suffix
+}

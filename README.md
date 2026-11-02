@@ -12,7 +12,7 @@ This repository contains the production engineering artifacts for migrating the 
 | Phase 4 | Target Deployment | EC2 compute, Amazon RDS PostgreSQL 16.10, ALB, network isolation | COMPLETED |
 | Phase 5 | Data Replication | AWS DMS initial full load plus continuous Change Data Capture replication | COMPLETED |
 | Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, rollback execution | COMPLETED |
-| Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | PENDING |
+| Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | COMPLETED |
 | Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | PENDING |
 | Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS deployment | PENDING |
 | Phase 10 | Disaster Recovery | Multi Region cross replication, failover rehearsal, RTO validation | PENDING |
@@ -40,6 +40,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **ADR 003** | Zero Open Port Administration | SSH Bastion Hosts vs AWS Systems Manager | Zero open port 22 via AWS SSM Session Manager | [View Record](docs/decisions/ADR-003-zero-open-ports-systems-manager.md) |
 | **ADR 004** | Managed Persistence Replatforming | Self Managed EC2 PostgreSQL vs Amazon RDS | Managed Amazon RDS PostgreSQL with automated PITR | [View Record](docs/decisions/ADR-004-managed-rds-postgresql.md) |
 | **ADR 005** | Database Replication Methodology | AWS DMS Full Load and CDC vs Native Snapshot Pipe | Cryptographic snapshot pipeline and sequence alignment | [View Record](docs/decisions/ADR-005-database-migration-strategy.md) |
+| **ADR 006** | Observability Architecture | Native CloudWatch vs Standalone Splunk SIEM Cluster | Native CloudWatch Alarms with SIEM Firehose Streaming | [View Record](docs/decisions/ADR-006-observability-tooling-cloudwatch-vs-splunk.md) |
 
 ## Repository Technical Documentation Matrices
 
@@ -55,6 +56,7 @@ This repository contains the production engineering artifacts for migrating the 
 | Operational Document | Operational Domain | Practical Value and Scope | Direct Access |
 | :--- | :--- | :--- | :--- |
 | **Engineering Incident Post Mortems** | SRE and Failure Analysis | Root cause analyses and exact code fixes for 7 production crashes | [Open Post Mortems](docs/troubleshooting-log.md) |
+| **Cloud Operations Runbook** | Site Reliability Engineering | SOP for handling ALB 5XX alerts and database connection drops | [Open Runbook](docs/operations-runbook.md) |
 | **Source Environment Runbook** | Operations SOP | Command reference for building, testing, backing up, and restoring | [Open Runbook](docs/source-environment-runbook.md) |
 | **Project Delivery Status Tracker** | Governance and Milestones | Real time phase sign offs and completion evidence across all phases | [Open Status](docs/project-status.md) |
 

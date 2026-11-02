@@ -60,3 +60,13 @@ module "compute" {
   app_security_group_id = module.networking.app_security_group_id
   instance_type         = "t3.small"
 }
+
+module "monitoring" {
+  source = "../../modules/monitoring"
+
+  project_name            = var.project_name
+  environment             = var.environment
+  alb_arn_suffix          = module.compute.alb_arn_suffix
+  target_group_arn_suffix = module.compute.target_group_arn_suffix
+  db_instance_id          = module.database.db_instance_id
+}
