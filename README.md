@@ -15,8 +15,8 @@ This repository contains the production engineering artifacts for migrating the 
 | Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | COMPLETED |
 | Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | COMPLETED |
 | Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS deployment | COMPLETED |
-| Phase 10 | Disaster Recovery | Multi Region cross replication, failover rehearsal, RTO validation | PENDING |
-| Phase 11 | Portfolio Master Report | Comprehensive technical case study report and end to end topology | PENDING |
+| Phase 10 | Disaster Recovery | Multi Region cross replication, failover rehearsal, RTO validation | COMPLETED |
+| Phase 11 | Portfolio Master Report | Comprehensive technical case study report and end to end topology | COMPLETED |
 
 ## Core Banking Technology Matrix
 | Technology Domain | Tool / Platform | Operational Purpose |
@@ -43,6 +43,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **ADR 006** | Observability Architecture | Native CloudWatch vs Standalone Splunk SIEM Cluster | Native CloudWatch Alarms with SIEM Firehose Streaming | [View Record](docs/decisions/ADR-006-observability-tooling-cloudwatch-vs-splunk.md) |
 | **ADR 007** | Server Migration Methodology | AWS MGN Block Rehosting vs Automated Container Rebuild | Clean Container Rebuilding with Terraform | [View Record](docs/decisions/ADR-007-mgn-feasibility.md) |
 | **ADR 008** | Modernization Architecture | Modular Monolith vs ECS Fargate vs Amazon EKS | Managed Kubernetes on Amazon EKS with HPA | [View Record](docs/decisions/ADR-008-modernization-eks-vs-modular-monolith.md) |
+| **ADR 009** | Disaster Recovery Strategy | Backup/Restore vs Pilot Light vs Active/Active | Pilot Light with Amazon RDS Cross Region Read Replica | [View Record](docs/decisions/ADR-009-disaster-recovery-strategy.md) |
 
 ## Repository Technical Documentation Matrices
 
@@ -54,6 +55,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **Workload Migration Assessment** | Migration Planning | Stateless vs stateful decomposition, RTO and RPO targets | [Open Assessment](docs/migration-assessment.md) |
 | **Modernized Architecture Specification** | Kubernetes Modernization | Amazon EKS cluster architecture, pod boundaries, HPA scaling | [Open Specification](docs/architecture/modernized-state.md) |
 | **Security Architecture Review** | Compliance and Hardening | Zero open port 22 audit, private RDS isolation, secrets protection | [Open Audit](docs/security-review.md) |
+| **Disaster Recovery Plan** | Business Continuity | Multi Region failover plan, RTO and RPO targets, and failback SOP | [Open Plan](docs/disaster-recovery-plan.md) |
 
 ### Operational Runbooks and Production Incident Analysis
 | Operational Document | Operational Domain | Practical Value and Scope | Direct Access |
@@ -69,4 +71,5 @@ This repository contains the production engineering artifacts for migrating the 
 | **Baseline Verification Metrics** | Source QA Testing | Automated test results and deterministic 3 customer / 5 transaction catalog | [Open Metrics](docs/baseline-metrics.md) |
 | **Database Migration Report** | Persistence Migration | PostgreSQL 16.10 replatforming, SSL enforcement, sequence sync | [Open Report](docs/database-migration-report.md) |
 | **Cutover and Rollback Execution Report** | Business Continuity | Maintenance window execution, traffic switch, and data reconciliation | [Open Report](docs/cutover-report.md) |
+| **Master Portfolio Case Study Report** | Executive Retrospective | Complete 11 phase retrospective, master topology, and FinOps audit | [Open Master Report](docs/master-portfolio-report.md) |
 | **Server Migration Feasibility Assessment** | Rehosting Strategy | AWS MGN block level replication evaluation vs container rebuilding | [Open Assessment](docs/mgn-feasibility-assessment.md) |
