@@ -33,10 +33,11 @@ This repository contains the production engineering artifacts for migrating the 
 | Target Modernization Engine | Amazon EKS (Kubernetes) | Containerized microservices scaling ledger processing independently |
 
 ## Architecture Decision Records Catalog
-1. ADR 001: Source Environment Architecture and Baseline Stack Selection (`docs/decisions/ADR-001-source-environment-baseline.md`)
-2. ADR 002: Cloud Migration Strategy, Tooling Selection, and Target Architecture Pattern (`docs/decisions/ADR-002-migration-strategy.md`)
-3. ADR 003: Zero Open Port Administration via AWS Systems Manager Session Manager (`docs/decisions/ADR-003-zero-open-ports-systems-manager.md`)
-4. ADR 004: Database Replatforming to Amazon RDS for PostgreSQL (`docs/decisions/ADR-004-managed-rds-postgresql.md`)
+1. [ADR 001: Source Environment Architecture and Baseline Stack Selection](docs/decisions/ADR-001-source-environment-baseline.md)
+2. [ADR 002: Cloud Migration Strategy, Tooling Selection, and Target Architecture Pattern](docs/decisions/ADR-002-migration-strategy.md)
+3. [ADR 003: Zero Open Port Administration via AWS Systems Manager Session Manager](docs/decisions/ADR-003-zero-open-ports-systems-manager.md)
+4. [ADR 004: Database Replatforming to Amazon RDS for PostgreSQL](docs/decisions/ADR-004-managed-rds-postgresql.md)
+5. [ADR 005: Database Migration Methodology and AWS DMS Evaluation](docs/decisions/ADR-005-database-migration-strategy.md)
 
 ## Security and Regulatory Compliance Posture
 1. Zero Inbound Administrative Ports: The application host completely eliminates TCP port 22 exposure. Shell access operates exclusively across encrypted channels managed by AWS Systems Manager.
@@ -44,13 +45,13 @@ This repository contains the production engineering artifacts for migrating the 
 3. Cryptographic Data Protection: Storage volumes use AWS KMS managed gp3 encryption. Database credentials inject dynamically into runtime memory without touching disk configuration files.
 
 ## Repository Documentation Index
-1. Baseline Architecture Specification: `docs/architecture/current-state.md`
-2. Cloud Foundation Architecture Specification: `docs/architecture/cloud-foundation.md`
-3. Workload Migration Assessment: `docs/migration-assessment.md`
-4. Security Architecture Review: `docs/security-review.md`
-5. Baseline Metrics and Verification Report: `docs/baseline-metrics.md`
-6. Engineering Incident Post Mortem Report: `docs/troubleshooting-log.md`
-7. Source Environment Operational Runbook: `docs/source-environment-runbook.md`
-8. Database Migration and Parity Report: `docs/database-migration-report.md`
-9. Cutover and Rollback Execution Report: `docs/cutover-report.md`
-9. Project Phase Status Tracker: `docs/project-status.md`
+1. [Baseline Architecture Specification](docs/architecture/current-state.md): Technical specifications and topology of the on premises source environment.
+2. [Cloud Foundation Architecture Specification](docs/architecture/cloud-foundation.md): Multi tier AWS VPC, subnets, route tables, and defense in depth security groups.
+3. [Workload Migration Assessment](docs/migration-assessment.md): Stateless vs stateful decomposition, RTO and RPO targets, and target AWS design.
+4. [Security Architecture Review](docs/security-review.md): Audit verification of zero open ports, database isolation, and secrets encryption.
+5. [Baseline Metrics and Verification Report](docs/baseline-metrics.md): Automated verification test results and deterministic seed data catalog.
+6. [Engineering Incident Post Mortem Report](docs/troubleshooting-log.md): Root cause analyses and exact code fixes for seven production incidents.
+7. [Source Environment Operational Runbook](docs/source-environment-runbook.md): Standard operating procedures for running, testing, and backing up source systems.
+8. [Database Migration and Parity Report](docs/database-migration-report.md): Record counts, transport encryption verification, and sequence synchronization metrics.
+9. [Cutover and Rollback Execution Report](docs/cutover-report.md): Preflight checks, traffic switching latency, and reverse data reconciliation evidence.
+10. [Project Phase Status Tracker](docs/project-status.md): Real time roadmap sign off and completion evidence across all project phases.
