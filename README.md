@@ -51,4 +51,5 @@ This repository contains the production engineering artifacts for migrating the 
 5. Baseline Metrics and Verification Report: `docs/baseline-metrics.md`
 6. Engineering Incident Post Mortem Report: `docs/troubleshooting-log.md`
 7. Source Environment Operational Runbook: `docs/source-environment-runbook.md`
-8. Project Phase Status Tracker: `docs/project-status.md`
+8. Database Migration and Parity Report: `docs/database-migration-report.md`
+9. Project Phase Status Tracker: `docs/project-status.md`
