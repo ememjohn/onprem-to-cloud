@@ -10,7 +10,7 @@ This repository contains the production engineering artifacts for migrating the 
 | Phase 2 | Migration Assessment | Workload decomposition, RTO and RPO targets, target VPC design | COMPLETED |
 | Phase 3 | AWS Infrastructure | Terraform multi tier VPC, private subnets, security groups, IAM roles | COMPLETED |
 | Phase 4 | Target Deployment | EC2 compute, Amazon RDS PostgreSQL 16.10, ALB, network isolation | COMPLETED |
-| Phase 5 | Data Replication | AWS DMS initial full load plus continuous Change Data Capture replication | IN PROGRESS |
+| Phase 5 | Data Replication | AWS DMS initial full load plus continuous Change Data Capture replication | COMPLETED |
 | Phase 6 | Cutover and Rollback | Traffic migration rehearsal, health probing, rollback execution | PENDING |
 | Phase 7 | Cloud Observability | Amazon CloudWatch logs, metric alarms, incident recovery runbooks | PENDING |
 | Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | PENDING |
