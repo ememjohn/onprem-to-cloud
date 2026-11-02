@@ -32,26 +32,35 @@ This repository contains the production engineering artifacts for migrating the 
 | Data Migration Pipeline | AWS Database Migration Service (DMS) | Initial bulk data transfer followed by continuous logical CDC sync |
 | Target Modernization Engine | Amazon EKS (Kubernetes) | Containerized microservices scaling ledger processing independently |
 
-## Architecture Decision Records Catalog
-1. [ADR 001: Source Environment Architecture and Baseline Stack Selection](docs/decisions/ADR-001-source-environment-baseline.md)
-2. [ADR 002: Cloud Migration Strategy, Tooling Selection, and Target Architecture Pattern](docs/decisions/ADR-002-migration-strategy.md)
-3. [ADR 003: Zero Open Port Administration via AWS Systems Manager Session Manager](docs/decisions/ADR-003-zero-open-ports-systems-manager.md)
-4. [ADR 004: Database Replatforming to Amazon RDS for PostgreSQL](docs/decisions/ADR-004-managed-rds-postgresql.md)
-5. [ADR 005: Database Migration Methodology and AWS DMS Evaluation](docs/decisions/ADR-005-database-migration-strategy.md)
+## Architecture Decision Records (ADRs)
+| ADR Identifier | Architectural Scope | Evaluated Tradeoffs | Selected Approach | Decision Record |
+| :--- | :--- | :--- | :--- | :--- |
+| **ADR 001** | Baseline Source Stack | FastAPI vs Django / SQLite vs PostgreSQL | FastAPI and PostgreSQL 16 on Docker Compose | [View Record](docs/decisions/ADR-001-source-environment-baseline.md) |
+| **ADR 002** | Cloud Migration Strategy | Terraform vs CloudFormation / Rehost vs Replatform | Staged Replatforming managed via Terraform | [View Record](docs/decisions/ADR-002-migration-strategy.md) |
+| **ADR 003** | Zero Open Port Administration | SSH Bastion Hosts vs AWS Systems Manager | Zero open port 22 via AWS SSM Session Manager | [View Record](docs/decisions/ADR-003-zero-open-ports-systems-manager.md) |
+| **ADR 004** | Managed Persistence Replatforming | Self Managed EC2 PostgreSQL vs Amazon RDS | Managed Amazon RDS PostgreSQL with automated PITR | [View Record](docs/decisions/ADR-004-managed-rds-postgresql.md) |
+| **ADR 005** | Database Replication Methodology | AWS DMS Full Load and CDC vs Native Snapshot Pipe | Cryptographic snapshot pipeline and sequence alignment | [View Record](docs/decisions/ADR-005-database-migration-strategy.md) |
 
-## Security and Regulatory Compliance Posture
-1. Zero Inbound Administrative Ports: The application host completely eliminates TCP port 22 exposure. Shell access operates exclusively across encrypted channels managed by AWS Systems Manager.
-2. Database Tier Isolation: The primary PostgreSQL cluster resides in dedicated isolated subnets with zero internet gateway routes. External connection attempts time out automatically at the perimeter.
-3. Cryptographic Data Protection: Storage volumes use AWS KMS managed gp3 encryption. Database credentials inject dynamically into runtime memory without touching disk configuration files.
+## Repository Technical Documentation Matrices
 
-## Repository Documentation Index
-1. [Baseline Architecture Specification](docs/architecture/current-state.md): Technical specifications and topology of the on premises source environment.
-2. [Cloud Foundation Architecture Specification](docs/architecture/cloud-foundation.md): Multi tier AWS VPC, subnets, route tables, and defense in depth security groups.
-3. [Workload Migration Assessment](docs/migration-assessment.md): Stateless vs stateful decomposition, RTO and RPO targets, and target AWS design.
-4. [Security Architecture Review](docs/security-review.md): Audit verification of zero open ports, database isolation, and secrets encryption.
-5. [Baseline Metrics and Verification Report](docs/baseline-metrics.md): Automated verification test results and deterministic seed data catalog.
-6. [Engineering Incident Post Mortem Report](docs/troubleshooting-log.md): Root cause analyses and exact code fixes for seven production incidents.
-7. [Source Environment Operational Runbook](docs/source-environment-runbook.md): Standard operating procedures for running, testing, and backing up source systems.
-8. [Database Migration and Parity Report](docs/database-migration-report.md): Record counts, transport encryption verification, and sequence synchronization metrics.
-9. [Cutover and Rollback Execution Report](docs/cutover-report.md): Preflight checks, traffic switching latency, and reverse data reconciliation evidence.
-10. [Project Phase Status Tracker](docs/project-status.md): Real time roadmap sign off and completion evidence across all project phases.
+### System Blueprints and Cloud Architecture Specifications
+| Specification Document | Engineering Domain | Architectural Deliverable | Direct Access |
+| :--- | :--- | :--- | :--- |
+| **Baseline Architecture Specification** | On Premises Source | Single host Linux Docker Compose topology and persistence model | [Open Specification](docs/architecture/current-state.md) |
+| **Cloud Foundation Specification** | AWS Landing Zone | Multi tier VPC, dual AZ subnets, route tables, and security groups | [Open Specification](docs/architecture/cloud-foundation.md) |
+| **Workload Migration Assessment** | Migration Planning | Stateless vs stateful decomposition, RTO and RPO targets | [Open Assessment](docs/migration-assessment.md) |
+| **Security Architecture Review** | Compliance and Hardening | Zero open port 22 audit, private RDS isolation, secrets protection | [Open Audit](docs/security-review.md) |
+
+### Operational Runbooks and Production Incident Analysis
+| Operational Document | Operational Domain | Practical Value and Scope | Direct Access |
+| :--- | :--- | :--- | :--- |
+| **Engineering Incident Post Mortems** | SRE and Failure Analysis | Root cause analyses and exact code fixes for 7 production crashes | [Open Post Mortems](docs/troubleshooting-log.md) |
+| **Source Environment Runbook** | Operations SOP | Command reference for building, testing, backing up, and restoring | [Open Runbook](docs/source-environment-runbook.md) |
+| **Project Delivery Status Tracker** | Governance and Milestones | Real time phase sign offs and completion evidence across all phases | [Open Status](docs/project-status.md) |
+
+### Migration Execution Reports and Validation Evidence
+| Migration Report | Verification Domain | Quantitative Evidence and Result | Direct Access |
+| :--- | :--- | :--- | :--- |
+| **Baseline Verification Metrics** | Source QA Testing | Automated test results and deterministic 3 customer / 5 transaction catalog | [Open Metrics](docs/baseline-metrics.md) |
+| **Database Migration Report** | Persistence Migration | PostgreSQL 16.10 replatforming, SSL enforcement, sequence sync | [Open Report](docs/database-migration-report.md) |
+| **Cutover and Rollback Execution Report** | Business Continuity | Maintenance window execution, traffic switch, and data reconciliation | [Open Report](docs/cutover-report.md) |
