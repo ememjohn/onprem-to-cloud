@@ -59,7 +59,7 @@ This repository contains the production engineering artifacts for migrating the 
 | **Project Delivery Status Tracker** | Governance and Milestones | Real time phase sign offs and completion evidence across all phases | [Open Status](docs/project-status.md) |
 
 ### Migration Execution Reports and Validation Evidence
-| Migration Report | Verification Domain | Quantitative Evidence and Result | Direct Access |
+| Migration Report | Verification Domain | Quantitative Evidence and Result | Direct Link |
 | :--- | :--- | :--- | :--- |
 | **Baseline Verification Metrics** | Source QA Testing | Automated test results and deterministic 3 customer / 5 transaction catalog | [Open Metrics](docs/baseline-metrics.md) |
 | **Database Migration Report** | Persistence Migration | PostgreSQL 16.10 replatforming, SSL enforcement, sequence sync | [Open Report](docs/database-migration-report.md) |
