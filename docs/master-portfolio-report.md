@@ -15,39 +15,61 @@ Primary business drivers for cloud migration included:
 
 ```mermaid
 graph TD
-    ClientIngress[Public Client & Interbank Ingress] --> CloudPerimeter[AWS Internet Gateway]
-    CloudPerimeter --> PublicALB[Application Load Balancer: Dual AZ]
-
-    subgraph AWS_Landing_Zone [Custom AWS VPC Primary Region (Stockholm): Private VPC Network]
-        subgraph Public_Tier [Public Ingress Subnet Tier]
+    ClientTraffic[Public Client and Interbank Ingress] --> Route53[Amazon Route 53: DNS Latency and Failover Routing]
+    
+    subgraph Primary_Production_Region [Primary Production Region: Stockholm eu-north-1]
+        IGW[AWS Internet Gateway]
+        PublicALB[Public Application Load Balancer: Dual AZ Ingress]
+        
+        subgraph Public_Ingress_Tier [Public Ingress Subnet Tier]
             PublicALB
         end
-
-        subgraph Compute_Tier [Application Compute Tier]
-            EC2_Rehost[Phase 4 Target: Rehosted EC2 Instance via AWS Systems Manager]
-            EKS_Modernized[Phase 9 Target: Amazon EKS Kubernetes Cluster]
+        
+        subgraph Compute_Tier [Private Application Compute Tier]
+            EC2_Host[Rehosted Compute: Amazon EC2 Linux Instance]
+            EKS_Cluster[Modernized Kubernetes: Amazon EKS Cluster]
+            AccountSvc[Account KYC Service: Port 8001]
+            SettlementSvc[Settlement Service: Port 8002 with HPA]
+            
+            EKS_Cluster --> AccountSvc
+            EKS_Cluster --> SettlementSvc
         end
-
-        subgraph Persistence_Tier [Isolated Database Subnet Tier: No Internet Access]
-            RDS_Postgres[(Amazon RDS PostgreSQL 16.10: Encrypted gp3 Multi AZ Subnet Group)]
+        
+        subgraph Persistence_Tier [Isolated Database Subnet Tier: Zero Internet Routes]
+            PrimaryRDS[(Amazon RDS PostgreSQL 16.10: Encrypted Multi AZ Cluster)]
         end
     end
 
-    subgraph On_Premises_Source [Phase 1 Source Environment: On Premises Linux Server]
-        SourceApp[FastAPI Ledger Core] --> SourceDB[(PostgreSQL 16: Local Volume)]
+    subgraph Secondary_Recovery_Region [Secondary Disaster Recovery Region: Ireland eu-west-1]
+        DR_ALB[Standby Application Load Balancer]
+        DR_Compute[Pilot Light Compute Cluster: Dormant Templates]
+        DR_RDS[(Amazon RDS PostgreSQL: Cross Region Read Replica)]
+        
+        DR_ALB -.-> DR_Compute
+        DR_Compute -.-> DR_RDS
     end
 
-    subgraph Security_and_Telemetry [AWS Governance & SRE Layer]
-        SSM[AWS Systems Manager Session Manager: Port 22 Closed]
-        CloudWatch[Amazon CloudWatch Alarms: 5XX Errors & Connection Drops]
-        SecretsMgr[AWS Secrets Manager: Dynamic Credential Rotation]
+    subgraph On_Premises_Source [Source Bank Data Center]
+        SourceApp[FastAPI Ledger Monolith] --> SourceDB[(PostgreSQL 16 Engine on Local Volume)]
     end
 
-    PublicALB -->|Ingress Port 8000| EC2_Rehost
-    PublicALB -->|Ingress Ingress Controller| EKS_Modernized
-    EC2_Rehost -->|Private Socket Port 5432 with SSL| RDS_Postgres
-    EKS_Modernized -->|Private Socket Port 5432 with SSL| RDS_Postgres
-    SourceDB -.->|Cryptographic Snapshot Migration| RDS_Postgres
+    subgraph Governance_and_SRE [Cross-Cutting Security and Telemetry Plane]
+        SSM[AWS Systems Manager: Zero Open Port 22 Session Channel]
+        SecretsMgr[AWS Secrets Manager: KMS Encrypted Dynamic Credentials]
+        CloudWatch[Amazon CloudWatch: ALB 5XX and RDS Connection Alarms]
+    end
+
+    Route53 -->|Active Route 100 Percent Traffic| PublicALB
+    Route53 -.->|Failover on Primary Disaster| DR_ALB
+    PublicALB -->|Ingress Port 8000| EC2_Host
+    PublicALB -->|Ingress Rules /api/v1| EKS_Cluster
+    EC2_Host -->|Private Socket 5432 TLS 1.3| PrimaryRDS
+    SettlementSvc -->|Private Socket 5432 TLS 1.3| PrimaryRDS
+    SourceDB -.->|Cryptographic Snapshot Stream| PrimaryRDS
+    PrimaryRDS -->|Asynchronous WAL Streaming Replication| DR_RDS
+    SecretsMgr -.->|In Memory Credential Injection| EC2_Host
+    SecretsMgr -.->|In Memory Credential Injection| EKS_Cluster
+    SSM -.->|Encrypted IAM Shell Channel| EC2_Host
 ```
 
 ## 3. Architecture Decision Records (ADRs) Summary Matrix
@@ -62,6 +84,9 @@ graph TD
 | ADR 007 | Server Migration | AWS MGN Block Rehosting vs Container Rebuild | Clean Container Rebuilding with Terraform |
 | ADR 008 | Modernization | Modular Monolith vs ECS Fargate vs Amazon EKS | Managed Kubernetes on Amazon EKS with HPA |
 | ADR 009 | Disaster Recovery | Backup/Restore vs Pilot Light vs Active/Active | Pilot Light with Amazon RDS Cross Region Read Replica |
+| ADR 010 | Cutover Boundaries | Immediate DNS vs Pre-Cutover TTL Reduction | Route 53 Health Checks with Post Write Reconciliation |
+| ADR 011 | Secrets Protection | Plaintext Files vs SSM Parameter Store vs Secrets Manager | AWS Secrets Manager with KMS Envelope Encryption |
+| ADR 012 | FinOps Network Egress | Multi-AZ NAT Gateway vs Direct IGW Route | Direct IGW Egress with Strict Security Group Referencing |
 
 ## 4. Security, Compliance, and FinOps Retrospective
 1. Zero Inbound Administrative Ports: TCP port 22 was eliminated. All shell executions operated through encrypted channels via AWS Systems Manager Session Manager.
