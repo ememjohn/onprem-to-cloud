@@ -78,4 +78,4 @@ This repository contains the production engineering artifacts for migrating the 
 | **Database Migration Report** | Persistence Migration | PostgreSQL 16.10 replatforming, SSL enforcement, sequence sync | [Open Report](docs/database-migration-report.md) |
 | **Cutover and Rollback Execution Report** | Business Continuity | Maintenance window execution, traffic switch, and data reconciliation | [Open Report](docs/cutover-report.md) |
 | **Server Migration Feasibility Assessment** | Rehosting Strategy | AWS MGN block level replication evaluation vs container rebuilding | [Open Assessment](docs/mgn-feasibility-assessment.md) |
-| **Master Portfolio Case Study Report** | Executive Retrospective | Complete 11 phase retrospective, master topology, and FinOps audit | [Open Master Report](docs/master-portfolio-report.md) |
+
