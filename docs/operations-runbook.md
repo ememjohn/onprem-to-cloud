@@ -16,7 +16,7 @@ Symptom:
 Application Load Balancer reports that the backend target returns HTTP 500 or 503 status codes.
 Triage Sequence:
 1. Check the target group health state:
-   `aws elbv2 describe-target-health --target-group-arn <TARGET_GROUP_ARN> --region eu-north-1`
+   `aws elbv2 describe-target-health --target-group-arn <TARGET_GROUP_ARN> --region Primary Region (Stockholm)`
 2. Connect to the EC2 host using AWS Systems Manager to inspect container logs:
    `docker logs sabay_app --tail 50`
 3. Verify database socket reachability from the container to Amazon RDS on port 5432.
@@ -28,8 +28,8 @@ Symptom:
 Active client connection count on Amazon RDS drops to zero.
 Triage Sequence:
 1. Verify whether the database is performing automated maintenance or failover:
-   `aws rds describe-db-instances --db-instance-identifier sabay-bank-dev-postgres --region eu-north-1`
+   `aws rds describe-db-instances --db-instance-identifier sabay-bank-dev-postgres --region Primary Region (Stockholm)`
 2. Verify that the EC2 application host is in the running state and healthy:
-   `aws ec2 describe-instance-status --instance-ids <INSTANCE_ID> --region eu-north-1`
+   `aws ec2 describe-instance-status --instance-ids <INSTANCE_ID> --region Primary Region (Stockholm)`
 3. Verify that the application container is active and holding connection pool sockets:
    `docker exec sabay_app python3 -c "from src.database import engine; print(engine.pool.status())"`

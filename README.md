@@ -10,7 +10,7 @@ graph TD
     ClientIngress[Public Client and Interbank Ingress] --> CloudPerimeter[AWS Internet Gateway]
     CloudPerimeter --> PublicALB[Application Load Balancer: Dual AZ Ingress]
 
-    subgraph AWS_Landing_Zone [Custom AWS VPC eu-north-1: 10.0.0.0/16]
+    subgraph AWS_Landing_Zone [Custom AWS VPC Primary Region (Stockholm): Private VPC Network]
         subgraph Public_Tier [Public Ingress Subnet Tier]
             PublicALB
         end

@@ -39,10 +39,10 @@ High (Complete API block across default regions)
 Initial Terraform planning targeting us-east-1 failed with an explicit authorization denial:
 UnauthorizedOperation: User is not authorized to perform ec2:DescribeVpcs with an explicit deny in a service control policy.
 
-Investigation identified that new AWS Builder accounts operate under automated organization guardrails. AWS attaches a default Service Control Policy locking new projects strictly to an assigned geographic region. Probing regional endpoints revealed that while us-east-1 was explicitly blocked, eu-north-1 (Stockholm) held an active default VPC and full API permissions.
+Investigation identified that new AWS Builder accounts operate under automated organization guardrails. AWS attaches a default Service Control Policy locking new projects strictly to an assigned geographic region. Probing regional endpoints revealed that while us-east-1 was explicitly blocked, Primary Region (Stockholm) (Stockholm) held an active default VPC and full API permissions.
 
 ### Remediation Action
-1. Updated Terraform variables to target region eu-north-1 with availability zones eu-north-1a and eu-north-1b.
+1. Updated Terraform variables to target region Primary Region (Stockholm) with availability zones Primary Region (Stockholm)a and Primary Region (Stockholm)b.
 2. Verified API permissions using AWS CLI, confirming zero permission barriers in the Stockholm region.
 
 ---

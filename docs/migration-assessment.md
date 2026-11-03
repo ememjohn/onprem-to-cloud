@@ -17,7 +17,7 @@ graph TD
     ClientTraffic[Client HTTPS Traffic] --> InternetGW[AWS Internet Gateway]
     InternetGW --> ALB[Application Load Balancer: Public Subnets AZ-1 / AZ-2]
 
-    subgraph AWS_VPC [Custom AWS VPC: 10.0.0.0/16]
+    subgraph AWS_VPC [Custom AWS VPC: Private VPC Network]
         subgraph Public_Tier [Public Ingress Subnet Tier]
             ALB
         end
@@ -50,9 +50,9 @@ graph TD
 ## 4. Network and Security Boundary Specifications
 | Subnet Tier | CIDR Block Allocation | Public Route Access | Ingress Rules | Egress Rules |
 | :--- | :--- | :--- | :--- | :--- |
-| Public Ingress Tier | 10.0.1.0/24, 10.0.2.0/24 | Internet Gateway Route | Port 80 and Port 443 from 0.0.0.0/0 | Port 8000 forward to Private App Tier |
-| Private App Tier | 10.0.10.0/24, 10.0.20.0/24 | No Direct Public Route | Port 8000 strictly from ALB Security Group | Port 5432 to Database Tier, HTTPS to SSM |
-| Isolated DB Tier | 10.0.100.0/24, 10.0.200.0/24 | Strict No Internet Route | Port 5432 strictly from App Security Group and DMS | Complete outbound egress deny |
+| Public Ingress Tier | Public Ingress Zone A, Public Ingress Zone B | Internet Gateway Route | Port 80 and Port 443 from 0.0.0.0/0 | Port 8000 forward to Private App Tier |
+| Private App Tier | Private Compute Zone A, Private Compute Zone B | No Direct Public Route | Port 8000 strictly from ALB Security Group | Port 5432 to Database Tier, HTTPS to SSM |
+| Isolated DB Tier | Isolated Database Zone A, Isolated Database Zone B | Strict No Internet Route | Port 5432 strictly from App Security Group and DMS | Complete outbound egress deny |
 
 ## 5. Target Cloud Architecture Design
 The target AWS architecture establishes strict defense in depth isolation. Compute instances remain completely unexposed to the public internet, accessible administratively only through AWS Systems Manager Session Manager.

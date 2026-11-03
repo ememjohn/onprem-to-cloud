@@ -18,7 +18,7 @@ graph TD
     ClientIngress[Public Client & Interbank Ingress] --> CloudPerimeter[AWS Internet Gateway]
     CloudPerimeter --> PublicALB[Application Load Balancer: Dual AZ]
 
-    subgraph AWS_Landing_Zone [Custom AWS VPC eu-north-1: 10.0.0.0/16]
+    subgraph AWS_Landing_Zone [Custom AWS VPC Primary Region (Stockholm): Private VPC Network]
         subgraph Public_Tier [Public Ingress Subnet Tier]
             PublicALB
         end
@@ -73,7 +73,7 @@ graph TD
 During execution, seven real world production engineering incidents were diagnosed and resolved:
 1. Incident 1: FastAPI boot failure resolved by pinning email-validator in requirements.
 2. Incident 2: Archive corruption resolved by stripping pseudo TTY minus t flags from binary pg_dump commands.
-3. Incident 3: AWS Organizations region lock resolved by diagnosing and realigning infrastructure to eu-north-1.
+3. Incident 3: AWS Organizations region lock resolved by diagnosing and realigning infrastructure to Primary Region (Stockholm).
 4. Incident 4: Interrupted provisioning crash resolved by state reconciliation via terraform import.
 5. Incident 5: State import master password desync resolved using aws rds modify-db-instance with apply-immediately.
 6. Incident 6: Transport encryption enforcement resolved by configuring sslmode=require on connection pools.

@@ -9,22 +9,22 @@ This document establishes the foundational networking architecture deployed in A
 graph TD
     Internet[Public Internet: 0.0.0.0/0] --> IGW[AWS Internet Gateway]
 
-    subgraph AWS_VPC [VPC: 10.0.0.0/16]
+    subgraph AWS_VPC [VPC: Private VPC Network]
         subgraph Public_Tier [Public Ingress Subnet Tier: Dual AZ]
-            PubSub1[Public Subnet 1: 10.0.1.0/24 in us-east-1a]
-            PubSub2[Public Subnet 2: 10.0.2.0/24 in us-east-1b]
+            PubSub1[Public Subnet 1: Public Ingress Zone A in us-east-1a]
+            PubSub2[Public Subnet 2: Public Ingress Zone B in us-east-1b]
             ALB_SG[Security Group: alb-sg - Ingress: 80, 443]
         end
 
         subgraph Private_App_Tier [Private Application Subnet Tier: Compute]
-            AppSub1[Private App Subnet 1: 10.0.10.0/24 in us-east-1a]
-            AppSub2[Private App Subnet 2: 10.0.20.0/24 in us-east-1b]
+            AppSub1[Private App Subnet 1: Private Compute Zone A in us-east-1a]
+            AppSub2[Private App Subnet 2: Private Compute Zone B in us-east-1b]
             App_SG[Security Group: app-sg - Ingress: Port 8000 strictly from alb-sg]
         end
 
         subgraph Isolated_DB_Tier [Isolated Database Subnet Tier: Persistence]
-            DBSub1[Isolated DB Subnet 1: 10.0.100.0/24 in us-east-1a]
-            DBSub2[Isolated DB Subnet 2: 10.0.200.0/24 in us-east-1b]
+            DBSub1[Isolated DB Subnet 1: Isolated Database Zone A in us-east-1a]
+            DBSub2[Isolated DB Subnet 2: Isolated Database Zone B in us-east-1b]
             DB_SG[Security Group: db-sg - Ingress: Port 5432 strictly from app-sg]
             DBSubGroup[RDS DB Subnet Group: Dual AZ Persistence]
         end
@@ -41,12 +41,12 @@ graph TD
 ## Subnet Allocation and Routing Matrix
 | Subnet Classification | Availability Zone | CIDR Block Allocation | Gateway Route Association | Security Boundary |
 | :--- | :--- | :--- | :--- | :--- |
-| Public Subnet 1 | us-east-1a | 10.0.1.0/24 | Internet Gateway (0.0.0.0/0) | Ingress perimeter for Application Load Balancers |
-| Public Subnet 2 | us-east-1b | 10.0.2.0/24 | Internet Gateway (0.0.0.0/0) | Multi AZ redundancy for public ingress |
-| Private App Subnet 1 | us-east-1a | 10.0.10.0/24 | Private Route Table (No IGW) | Dedicated to EC2 application compute |
-| Private App Subnet 2 | us-east-1b | 10.0.20.0/24 | Private Route Table (No IGW) | Compute redundancy across availability zones |
-| Isolated DB Subnet 1 | us-east-1a | 10.0.100.0/24 | Isolated Route Table (No Egress) | Multi AZ RDS PostgreSQL cluster storage |
-| Isolated DB Subnet 2 | us-east-1b | 10.0.200.0/24 | Isolated Route Table (No Egress) | Multi AZ RDS PostgreSQL standby replica |
+| Public Subnet 1 | us-east-1a | Public Ingress Zone A | Internet Gateway (0.0.0.0/0) | Ingress perimeter for Application Load Balancers |
+| Public Subnet 2 | us-east-1b | Public Ingress Zone B | Internet Gateway (0.0.0.0/0) | Multi AZ redundancy for public ingress |
+| Private App Subnet 1 | us-east-1a | Private Compute Zone A | Private Route Table (No IGW) | Dedicated to EC2 application compute |
+| Private App Subnet 2 | us-east-1b | Private Compute Zone B | Private Route Table (No IGW) | Compute redundancy across availability zones |
+| Isolated DB Subnet 1 | us-east-1a | Isolated Database Zone A | Isolated Route Table (No Egress) | Multi AZ RDS PostgreSQL cluster storage |
+| Isolated DB Subnet 2 | us-east-1b | Isolated Database Zone B | Isolated Route Table (No Egress) | Multi AZ RDS PostgreSQL standby replica |
 
 ## Security Group Defense in Depth Matrix
 | Security Group Identifier | Ingress Source | Allowed Ports / Protocols | Egress Target | Operational Scope |

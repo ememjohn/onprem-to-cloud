@@ -13,7 +13,7 @@ graph LR
         SourceKernel --> Agent
     end
 
-    subgraph AWS_VPC [Target AWS VPC eu-north-1]
+    subgraph AWS_VPC [Target AWS VPC Primary Region (Stockholm)]
         subgraph Staging_Subnet [Dedicated MGN Staging Subnet]
             RepServer[Lightweight Replication Server: t3.small]
             StagingEBS[(EBS Staging Disks: 1-to-1 Mirror)]

@@ -7,7 +7,7 @@ Multi Region Disaster Recovery Strategy: Pilot Light with Amazon RDS Cross Regio
 Accepted
 
 ## Context
-Sabay Premium Bank requires a disaster recovery strategy to protect core banking operations against regional cloud outages. Financial regulatory bodies require an audited Recovery Time Objective (RTO) and Recovery Point Objective (RPO) ensuring business continuity in the event of a catastrophic failure in our primary AWS region (eu-north-1 Stockholm).
+Sabay Premium Bank requires a disaster recovery strategy to protect core banking operations against regional cloud outages. Financial regulatory bodies require an audited Recovery Time Objective (RTO) and Recovery Point Objective (RPO) ensuring business continuity in the event of a catastrophic failure in our primary AWS region (Primary Region (Stockholm) Stockholm).
 
 ## Evaluated Alternatives
 
@@ -20,7 +20,7 @@ Verdict: Rejected. The bank cannot tolerate multi hour service interruptions or 
 
 ### 2. Pilot Light (Selected Approach)
 Evaluation:
-Core persistence runs continuously in the secondary region (eu-west-1 Ireland) using an asynchronous Amazon RDS Cross Region Read Replica. Compute infrastructure (Terraform modules and container images) is maintained as dormant code templates ready for immediate provisioning or low scale standby.
+Core persistence runs continuously in the secondary region (Secondary DR Region (Ireland) Ireland) using an asynchronous Amazon RDS Cross Region Read Replica. Compute infrastructure (Terraform modules and container images) is maintained as dormant code templates ready for immediate provisioning or low scale standby.
 RTO: Under fifteen minutes (promoting replica to standalone write master and scaling compute).
 RPO: Under five seconds (asynchronous WAL streaming lag).
 Verdict: Selected. Balances strict financial availability requirements with sensible cloud cost governance.

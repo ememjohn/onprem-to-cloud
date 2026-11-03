@@ -25,7 +25,7 @@
 4. Live Ingress Verification: Application Load Balancer successfully serves live customer and ledger transactions.
 
 ## Phase 4 Verification Evidence Summary
-1. Infrastructure Provisioning: 34 resources successfully applied via Terraform in eu-north-1.
+1. Infrastructure Provisioning: 34 resources successfully applied via Terraform in Primary Region (Stockholm).
 2. Application Target Health: Application Load Balancer probe to /healthz returned HTTP 200 with database connected.
 3. Remote Host Management: EC2 host i-0052bced1c5a2653c managed via AWS Systems Manager with port 22 closed.
 4. Database Isolation Test: Direct port 5432 probes to private IP 10.0.100.20 timed out and failed as required.
