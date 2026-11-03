@@ -19,7 +19,6 @@ This repository contains the production engineering artifacts for migrating the 
 | Phase 8 | Server Migration | AWS Application Migration Service feasibility and rehosting assessment | COMPLETED |
 | Phase 9 | App Modernization | Monolith decomposition, containerization, Amazon EKS manifests, HPA | COMPLETED |
 | Phase 10 | Disaster Recovery | Multi Region cross replication plan, failover rehearsal, RTO validation | COMPLETED |
-| Phase 11 | Portfolio Master Report | Comprehensive technical case study report and end to end topology | COMPLETED |
 
 ## Core Banking Technology Matrix
 | Technology Domain | Tool / Platform | Operational Purpose |
