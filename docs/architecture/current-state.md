@@ -1,4 +1,3 @@
-# Baseline Architecture Specification: On Premises Core Ledger Environment
 
 ## Executive Briefing
 | Attribute | Specification | Operational Target |
@@ -9,20 +8,7 @@
 | Active Compute Engine | Python 3.12 with FastAPI Framework | Asynchronous ASGI Worker Model |
 | Active Database Engine | PostgreSQL 16 Alpine Distribution | ACID Relational Model |
 
-```mermaid
-graph TD
-    Client[Client Workstation: Port 8000] --> AppService[FastAPI Ledger Core: bank_source_app]
-
-    subgraph Host_Server [On Premises Bank Server Boundary]
-        AppService --> DBService[(PostgreSQL 16: bank_source_db)]
-        DBService --> DataVolume[(Named Docker Volume: bank_source_pgdata)]
-        OpsTooling[Backup Automation: pg_dump] -.-> DBService
-    end
-
-    subgraph Storage_Subsystem [Local Backup Subsystem]
-        OpsTooling --> BackupStorage[Encrypted Binary Archive: backups/*.dump]
-    end
-```
+<img width="748" height="348" alt="onprem-architecture" src="https://github.com/user-attachments/assets/bfc119ee-49f4-4300-8731-2f7282eec718" />
 
 ## Layer Specifications Matrix
 
