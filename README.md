@@ -3,66 +3,8 @@
 ## Executive Summary
 This repository contains the production engineering artifacts for migrating the core transaction and account settlement ledger of Sabay Premium Bank from an on premises Linux environment to Amazon Web Services. The project establishes an enterprise migration model: verifying local persistence and disaster recovery baselines, replatforming compute and database engines to AWS with zero open administrative ports, executing automated continuous data replication, and modernizing the monolithic ledger into event driven microservices on Kubernetes.
 
-## Master Cloud Architecture Blueprint
-
-```mermaid
-graph TD
-    ClientTraffic[Public Client and Interbank Ingress] --> Route53[Amazon Route 53: DNS Latency and Failover Routing]
-    
-    subgraph Primary_Production_Region [Primary Production Region: Stockholm eu-north-1]
-        IGW[AWS Internet Gateway]
-        PublicALB[Public Application Load Balancer: Dual AZ Ingress]
-        
-        subgraph Public_Ingress_Tier [Public Ingress Subnet Tier]
-            PublicALB
-        end
-        
-        subgraph Compute_Tier [Private Application Compute Tier]
-            EC2_Host[Rehosted Compute: Amazon EC2 Linux Instance]
-            EKS_Cluster[Modernized Kubernetes: Amazon EKS Cluster]
-            AccountSvc[Account KYC Service: Port 8001]
-            SettlementSvc[Settlement Service: Port 8002 with HPA]
-            
-            EKS_Cluster --> AccountSvc
-            EKS_Cluster --> SettlementSvc
-        end
-        
-        subgraph Persistence_Tier [Isolated Database Subnet Tier: Zero Internet Routes]
-            PrimaryRDS[(Amazon RDS PostgreSQL 16.10: Encrypted Multi AZ Cluster)]
-        end
-    end
-
-    subgraph Secondary_Recovery_Region [Secondary Disaster Recovery Region: Ireland eu-west-1]
-        DR_ALB[Standby Application Load Balancer]
-        DR_Compute[Pilot Light Compute Cluster: Dormant Templates]
-        DR_RDS[(Amazon RDS PostgreSQL: Cross Region Read Replica)]
-        
-        DR_ALB -.-> DR_Compute
-        DR_Compute -.-> DR_RDS
-    end
-
-    subgraph On_Premises_Source [Source Bank Data Center]
-        SourceApp[FastAPI Ledger Monolith] --> SourceDB[(PostgreSQL 16 Engine on Local Volume)]
-    end
-
-    subgraph Governance_and_SRE [Cross-Cutting Security and Telemetry Plane]
-        SSM[AWS Systems Manager: Zero Open Port 22 Session Channel]
-        SecretsMgr[AWS Secrets Manager: KMS Encrypted Dynamic Credentials]
-        CloudWatch[Amazon CloudWatch: ALB 5XX and RDS Connection Alarms]
-    end
-
-    Route53 -->|Active Route 100 Percent Traffic| PublicALB
-    Route53 -.->|Failover on Primary Disaster| DR_ALB
-    PublicALB -->|Ingress Port 8000| EC2_Host
-    PublicALB -->|Ingress Rules /api/v1| EKS_Cluster
-    EC2_Host -->|Private Socket 5432 TLS 1.3| PrimaryRDS
-    SettlementSvc -->|Private Socket 5432 TLS 1.3| PrimaryRDS
-    SourceDB -.->|Cryptographic Snapshot Stream| PrimaryRDS
-    PrimaryRDS -->|Asynchronous WAL Streaming Replication| DR_RDS
-    SecretsMgr -.->|In Memory Credential Injection| EC2_Host
-    SecretsMgr -.->|In Memory Credential Injection| EKS_Cluster
-    SSM -.->|Encrypted IAM Shell Channel| EC2_Host
-```
+## Master Cloud Architecture Work-flow
+<img width="1018" height="616" alt="sabay-architecture" src="https://github.com/user-attachments/assets/84b40950-2735-420d-8f4c-d13825e7aff9" />
 
 ## Phase Delivery Roadmap
 | Phase | Focus Area | Primary Engineering Deliverable | Delivery Status |
