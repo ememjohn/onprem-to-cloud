@@ -1,23 +1,46 @@
-# Secrets and environment files
+# Environments and Secrets
 .env
 *.env
 !.env.example
 *.pem
 *.key
+id_rsa*
+*.pfx
 
-# Python
+# Python Artifacts
 __pycache__/
 *.py[cod]
+*$py.class
 .venv/
 venv/
+ENV/
 .pytest_cache/
+.coverage
+htmlcov/
 
-# Terraform
+# Terraform State and Variables
 **/.terraform/*
 *.tfstate
 *.tfstate.*
+crash.log
+crash.*.log
 *.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
 
-# Database dumps
-*.dump
+# Database Archives and Logs
 *.sql.gz
+*.dump
+backups/*.dump
+*.log
+docker/data/
+source/postgres/data/
+
+# Operating System Files
+.DS_Store
+Thumbs.db

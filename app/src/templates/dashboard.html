@@ -1,208 +1,930 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sabay Premium Bank | Commercial Banking Operations Console</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="color-scheme" content="dark"/>
+<title>Sabay Premium Bank · Core Ledger &amp; Settlement Platform</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 2.5 34.5 11v18L20 37.5 5.5 29V11L20 2.5Z' fill='none' stroke='%23E3B94E' stroke-width='2.4'/%3E%3Cpath d='M13 15.5h14M13 20h14M13 24.5h9' stroke='%23E3B94E' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        abyss: '#04070D',
+        panel: '#0A101C',
+        ink:   '#E8EEF9',
+        dim:   '#93A1B8',
+        faint: '#5D6B82',
+        gold:  { DEFAULT:'#E3B94E', bright:'#F2CE73', deep:'#8A6D2F' }
+      },
+      fontFamily: {
+        display: ['"Space Grotesk"','Inter','system-ui','sans-serif'],
+        sans:    ['Inter','system-ui','sans-serif'],
+        mono:    ['"JetBrains Mono"','ui-monospace','SFMono-Regular','monospace']
+      },
+      boxShadow: {
+        card: '0 24px 60px -30px rgba(0,0,0,0.75)',
+        glow: '0 10px 34px -10px rgba(227,185,78,0.45), inset 0 1px 0 rgba(255,255,255,0.4)'
+      }
+    }
+  }
+};
+</script>
+<style>
+  html{scroll-behavior:smooth}
+  body{
+    background-color:#04070D;
+    background-image:
+      radial-gradient(1100px 520px at 85% -10%, rgba(227,185,78,0.075), transparent 60%),
+      radial-gradient(900px 620px at -15% 12%, rgba(56,189,248,0.06), transparent 55%),
+      radial-gradient(820px 520px at 50% 115%, rgba(16,185,129,0.05), transparent 60%);
+  }
+  .bg-grid{
+    background-image:
+      linear-gradient(rgba(232,238,249,0.030) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,238,249,0.030) 1px, transparent 1px);
+    background-size:42px 42px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 72% at 50% 0%, black 25%, transparent 78%);
+            mask-image:radial-gradient(ellipse 90% 72% at 50% 0%, black 25%, transparent 78%);
+  }
+  .card{
+    position:relative;
+    background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+    border:1px solid rgba(232,238,249,0.075);
+    border-radius:16px;
+    box-shadow:0 24px 60px -30px rgba(0,0,0,0.75);
+    backdrop-filter:blur(8px);
+  }
+  .hairline::before{
+    content:'';position:absolute;top:0;left:24px;right:24px;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(227,185,78,0.38), transparent);
+  }
+  .card-hover{transition:transform .2s ease, border-color .2s ease}
+  .card-hover:hover{transform:translateY(-2px);border-color:rgba(232,238,249,0.16)}
+  .tabnum{font-variant-numeric:tabular-nums}
+
+  @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(52,211,153,0.55)}70%{box-shadow:0 0 0 6px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+  .live-dot{width:6px;height:6px;border-radius:999px;background:#34D399;animation:pulseDot 1.7s ease-out infinite;flex-shrink:0}
+  @keyframes pulseDotAmber{0%{box-shadow:0 0 0 0 rgba(251,191,36,0.55)}70%{box-shadow:0 0 0 6px rgba(251,191,36,0)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
+
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .rise{animation:rise .55s cubic-bezier(.22,.8,.36,1) both}
+
+  @keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .ticker-track{display:flex;align-items:center;width:max-content;animation:tickerScroll 46s linear infinite}
+  .ticker:hover .ticker-track{animation-play-state:paused}
+  .ticker-half{display:flex;align-items:center;gap:28px;padding-right:28px}
+
+  .op-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;
+    background:rgba(255,255,255,0.028);border:1px solid rgba(232,238,249,0.07)}
+  .op-dot{width:6px;height:6px;border-radius:999px;flex-shrink:0}
+  .op-lbl{font-size:8.5px;font-weight:700;letter-spacing:0.2em;color:#5D6B82}
+  .op-val{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.02em}
+
+  .btn-ghost{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:10px;white-space:nowrap;
+    border:1px solid rgba(232,238,249,0.12);color:#93A1B8;font-size:12px;font-weight:500;
+    transition:all .15s ease}
+  .btn-ghost:hover{color:#E8EEF9;border-color:rgba(232,238,249,0.28);background:rgba(255,255,255,0.04)}
+  .btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:34px;padding:0 14px;border-radius:10px;white-space:nowrap;
+    background:linear-gradient(180deg,#F2CE73,#D9A93C);color:#241A03;font-size:12px;font-weight:700;letter-spacing:0.02em;
+    box-shadow:0 10px 30px -10px rgba(227,185,78,0.5), inset 0 1px 0 rgba(255,255,255,0.45);transition:all .15s ease}
+  .btn-gold:hover{filter:brightness(1.07)}
+  .btn-gold:active{transform:translateY(1px)}
+  .btn-gold:disabled{opacity:.55;cursor:not-allowed;filter:grayscale(.35)}
+
+  .field{background:rgba(255,255,255,0.028);border:1px solid rgba(232,238,249,0.11);border-radius:10px;
+    color:#E8EEF9;font-size:13px;outline:none;transition:border-color .15s ease, box-shadow .15s ease}
+  .field::placeholder{color:#5D6B82}
+  .field:focus{border-color:rgba(227,185,78,0.55);box-shadow:0 0 0 3px rgba(227,185,78,0.12)}
+  select.field option{background:#0A101C;color:#E8EEF9}
+  .lbl{display:block;font-size:10px;font-weight:700;letter-spacing:0.18em;color:#93A1B8;margin-bottom:7px;text-transform:uppercase}
+  .req{color:#E3B94E}
+
+  .chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 11px;border-radius:9px;
+    border:1px solid rgba(232,238,249,0.10);background:rgba(255,255,255,0.02);
+    font-size:10.5px;font-weight:700;letter-spacing:0.1em;color:#93A1B8;transition:all .15s ease;cursor:pointer}
+  .chip:hover{color:#E8EEF9;border-color:rgba(232,238,249,0.25)}
+  .chip.active{color:#F2CE73;border-color:rgba(227,185,78,0.45);background:rgba(227,185,78,0.08)}
+  .chip-count{font-family:'JetBrains Mono',monospace;font-weight:600;opacity:.75}
+
+  .preset{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;padding:6px 10px;border-radius:8px;
+    border:1px solid rgba(232,238,249,0.11);color:#93A1B8;background:rgba(255,255,255,0.02);transition:all .15s ease;cursor:pointer}
+  .preset:hover{color:#F2CE73;border-color:rgba(227,185,78,0.5);background:rgba(227,185,78,0.07)}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;
+    font-size:9.5px;font-weight:700;letter-spacing:0.14em;border:1px solid;white-space:nowrap}
+  .pill-dot{width:5px;height:5px;border-radius:999px;background:currentColor;flex-shrink:0}
+  .pill-settled{color:#6EE7B7;background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.30)}
+  .pill-completed{color:#7DD3FC;background:rgba(56,189,248,0.08);border-color:rgba(56,189,248,0.30)}
+  .pill-processing{color:#FCD34D;background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.32)}
+  .pill-processing .pill-dot{animation:pulseDotAmber 1.4s ease-out infinite}
+
+  .monogram{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:12.5px;flex-shrink:0;border:1px solid rgba(255,255,255,0.14);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.28)}
+  .monogram-mini{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:11px;border:1px solid rgba(255,255,255,0.16);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.28);outline:3px solid #0A101C}
+
+  .th{display:inline-flex;align-items:center;gap:6px;font-size:9.5px;font-weight:700;letter-spacing:0.18em;
+    color:#5D6B82;text-transform:uppercase;cursor:pointer;transition:color .15s ease}
+  .th:hover{color:#93A1B8}
+  .th.sorted{color:#F2CE73}
+  .th .sort-ic{opacity:.55}
+  .th.sorted .sort-ic{opacity:1}
+
+  .ledger-row{transition:background-color .15s ease}
+  @keyframes rowFlash{0%{background:rgba(227,185,78,0.18)}100%{background:transparent}}
+  .row-new{animation:rowFlash 2.2s ease-out 1}
+  .new-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:0.14em;
+    color:#F2CE73;border:1px solid rgba(227,185,78,0.45);background:rgba(227,185,78,0.08);
+    padding:1px 5px;border-radius:4px}
+
+  .copy-btn{opacity:0;transition:opacity .15s ease,color .15s ease;color:#5D6B82}
+  .ledger-row:hover .copy-btn{opacity:1}
+  .copy-btn:hover{color:#F2CE73}
+
+  .seg{display:flex;align-items:center;justify-content:center;height:36px;border-radius:9px;
+    font-size:10px;font-weight:700;letter-spacing:0.14em;color:#93A1B8;cursor:pointer;
+    border:1px solid transparent;transition:all .15s ease;user-select:none}
+  input:checked + .seg{color:#E8EEF9;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12)}
+  input:checked + .seg.st-settled{color:#6EE7B7;background:rgba(52,211,153,0.10);border-color:rgba(52,211,153,0.38)}
+  input:checked + .seg.st-processing{color:#FCD34D;background:rgba(251,191,36,0.10);border-color:rgba(251,191,36,0.38)}
+  input:checked + .seg.st-completed{color:#7DD3FC;background:rgba(56,189,248,0.10);border-color:rgba(56,189,248,0.38)}
+  input:focus-visible + .seg{outline:2px solid rgba(227,185,78,0.6);outline-offset:2px}
+
+  .tabbtn{height:26px;padding:0 10px;border-radius:7px;font-size:9.5px;font-weight:700;letter-spacing:0.14em;
+    color:#5D6B82;border:1px solid transparent;transition:all .15s ease;cursor:pointer}
+  .tabbtn:hover{color:#93A1B8}
+  .tabbtn.active{color:#F2CE73;background:rgba(227,185,78,0.08);border-color:rgba(227,185,78,0.4)}
+
+  .ct{fill:#5D6B82;font:600 9px 'JetBrains Mono',monospace;letter-spacing:0.08em}
+  .cv{fill:#E8EEF9;font:600 10px 'JetBrains Mono',monospace}
+  .cl{fill:#93A1B8;font:600 10px 'Space Grotesk',sans-serif;letter-spacing:0.06em}
+  .bar-g{transition:opacity .15s ease}
+  .bar-g:hover{opacity:.85}
+
+  .lg-item{display:inline-flex;align-items:center;gap:7px;font-size:10.5px;color:#93A1B8}
+  .lg-dot{width:7px;height:7px;border-radius:999px;flex-shrink:0}
+  .lg-val{font-family:'JetBrains Mono',monospace;color:#E8EEF9;font-weight:600}
+
+  .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+  .dc-num{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#E8EEF9;line-height:1}
+  .dc-lbl{margin-top:5px;font-size:8px;font-weight:700;letter-spacing:0.26em;color:#5D6B82}
+
+  .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 5px;
+    border:1px solid rgba(232,238,249,0.16);border-bottom-width:2px;border-radius:5px;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#93A1B8;background:rgba(255,255,255,0.03)}
+
+  .scroll-slim::-webkit-scrollbar{width:8px;height:8px}
+  .scroll-slim::-webkit-scrollbar-track{background:transparent}
+  .scroll-slim::-webkit-scrollbar-thumb{background:rgba(232,238,249,0.10);border-radius:999px}
+  .scroll-slim::-webkit-scrollbar-thumb:hover{background:rgba(232,238,249,0.2)}
+
+  .toast{display:flex;gap:11px;align-items:flex-start;width:100%;padding:12px 14px;border-radius:12px;
+    border:1px solid rgba(232,238,249,0.12);background:rgba(10,16,28,0.94);backdrop-filter:blur(10px);
+    box-shadow:0 18px 50px -12px rgba(0,0,0,0.75);animation:toastIn .24s cubic-bezier(.22,.8,.36,1) both}
+  @keyframes toastIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+  .toast-out{opacity:0;transform:translateX(18px);transition:all .25s ease}
+  .t-ic{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;flex-shrink:0;margin-top:1px}
+  .toast-success .t-ic{color:#6EE7B7;background:rgba(52,211,153,0.10);border:1px solid rgba(52,211,153,0.3)}
+  .toast-error .t-ic{color:#FCA5A5;background:rgba(248,113,113,0.10);border:1px solid rgba(248,113,113,0.3)}
+  .toast-info .t-ic{color:#7DD3FC;background:rgba(56,189,248,0.10);border:1px solid rgba(56,189,248,0.3)}
+  .t-x{color:#5D6B82;transition:color .15s ease;flex-shrink:0;margin-top:2px}
+  .t-x:hover{color:#E8EEF9}
+
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spin{animation:spin .9s linear infinite}
+</style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen antialiased">
-    <!-- Institutional Navigation Header -->
-    <header class="bg-white border-b border-slate-200/80 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 h-18 py-3.5 flex items-center justify-between">
-            <div class="flex items-center space-x-3.5">
-                <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-900 text-white font-bold text-lg font-mono shadow-sm">
-                    S
-                </div>
-                <div>
-                    <h1 class="text-base font-bold text-slate-900 tracking-tight">Sabay Premium Bank</h1>
-                    <p class="text-xs text-slate-500 font-medium">Core Banking Settlement Operations Console</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-3">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                    Production Core Ledger
-                </span>
-                <a href="/docs" target="_blank" class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors shadow-sm">
-                    API Documentation
-                </a>
-            </div>
+<body class="font-sans text-ink antialiased min-h-screen selection:bg-gold/30 selection:text-gold-bright">
+
+  <div class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
+    <div class="absolute inset-0 bg-grid"></div>
+  </div>
+
+  <!-- EXECUTIVE HEADER -->
+  <header class="sticky top-0 z-40 border-b border-white/[0.06] bg-abyss/85 backdrop-blur-xl">
+    <div class="max-w-[1600px] mx-auto px-4 md:px-8 h-16 flex items-center gap-5">
+      <a href="#" class="flex items-center gap-3 shrink-0" aria-label="Sabay Premium Bank home">
+        <svg width="38" height="38" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lgLogo" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F2CE73"/><stop offset="1" stop-color="#B98A2E"/>
+            </linearGradient>
+          </defs>
+          <path d="M20 2.5 34.5 11v18L20 37.5 5.5 29V11L20 2.5Z" stroke="url(#lgLogo)" stroke-width="1.6" fill="rgba(227,185,78,0.07)"/>
+          <path d="M13 15.5h14M13 20h14M13 24.5h9" stroke="url(#lgLogo)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="28" cy="24.5" r="1.8" fill="#F2CE73"/>
+        </svg>
+        <div class="leading-none">
+          <div class="font-display font-bold text-[15px] tracking-wide text-ink">SABAY <span class="text-gold-bright">PREMIUM BANK</span></div>
+          <div class="mt-[5px] font-mono text-[9px] tracking-[0.3em] text-faint uppercase">Core Ledger · Settlement Platform</div>
         </div>
-    </header>
+        <span class="hidden lg:inline-flex items-center h-5 px-2 rounded-md border border-gold/40 bg-gold/10 text-gold-bright font-mono text-[9px] font-bold tracking-[0.18em]">PROD</span>
+      </a>
 
-    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <!-- 4 Institutional Financial Metric Cards -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div class="p-6 rounded-xl bg-white border border-slate-200/80 shadow-sm">
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Gross Settled Capital</span>
-                <p class="text-2xl font-bold font-mono text-slate-900 mt-2">{{TOTAL_VOLUME}}</p>
-                <span class="text-xs text-slate-400 mt-1 block font-medium">Aggregated Transaction Ledger</span>
-            </div>
-            <div class="p-6 rounded-xl bg-white border border-slate-200/80 shadow-sm">
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Institutional Clients</span>
-                <p class="text-2xl font-bold font-mono text-slate-900 mt-2">{{CUSTOMERS_COUNT}}</p>
-                <span class="text-xs text-slate-400 mt-1 block font-medium">Verified Commercial Accounts</span>
-            </div>
-            <div class="p-6 rounded-xl bg-white border border-slate-200/80 shadow-sm">
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Settled Batches</span>
-                <p class="text-2xl font-bold font-mono text-slate-900 mt-2">{{ORDERS_COUNT}}</p>
-                <span class="text-xs text-slate-400 mt-1 block font-medium">Immutable Relational Records</span>
-            </div>
-            <div class="p-6 rounded-xl bg-white border border-slate-200/80 shadow-sm">
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Settlement Finality</span>
-                <p class="text-2xl font-bold font-mono text-emerald-600 mt-2">{{SETTLEMENT_RATE}}</p>
-                <span class="text-xs text-slate-400 mt-1 block font-medium">Mean Size: {{AVG_TXN}}</span>
-            </div>
-        </section>
-
-        <!-- Main Operational Grid: Ledger Table and Transaction Dispatch Form -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Left: Transaction Stream (8 Columns) -->
-            <section class="lg:col-span-8 p-6 rounded-xl bg-white border border-slate-200/80 shadow-sm space-y-5">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
-                    <div>
-                        <h2 class="text-base font-bold text-slate-900">Synchronized Transaction Stream</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Real time financial transaction feed from PostgreSQL engine</p>
-                    </div>
-                    <div>
-                        <input type="text" id="searchInput" placeholder="Filter by client or ID..." class="bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:bg-white transition-all w-56 font-mono">
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse" id="ledgerTable">
-                        <thead>
-                            <tr class="border-b border-slate-200 bg-slate-50/70 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                                <th class="py-3 px-4">Reference</th>
-                                <th class="py-3 px-4">Account Holder</th>
-                                <th class="py-3 px-4">Settled Amount</th>
-                                <th class="py-3 px-4">Status</th>
-                                <th class="py-3 px-4">Settlement Time</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-sm">
-                            {{TABLE_ROWS}}
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Right: Transaction Dispatch Terminal (4 Columns) -->
-            <section class="lg:col-span-4 p-6 rounded-xl bg-white border border-slate-200/80 shadow-sm space-y-5 flex flex-col justify-between">
-                <div>
-                    <div class="border-b border-slate-100 pb-4">
-                        <h2 class="text-base font-bold text-slate-900">Settlement Terminal</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Post immediate financial debit or credit</p>
-                    </div>
-
-                    <form id="txForm" class="space-y-4 mt-5">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Target Account</label>
-                            <select id="customerId" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:border-slate-900 focus:bg-white font-medium">
-                                {{CUSTOMER_OPTIONS}}
-                            </select>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-1.5">
-                                <label class="text-xs font-semibold text-slate-600">Settlement Amount in USD</label>
-                            </div>
-                            <input type="number" step="0.01" id="totalAmount" required placeholder="50000.00" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:border-slate-900 focus:bg-white font-mono">
-                            
-                            <div class="grid grid-cols-4 gap-1.5 mt-2">
-                                <button type="button" onclick="setAmount(5000)" class="py-1 px-2 text-xs font-medium rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">+$5K</button>
-                                <button type="button" onclick="setAmount(25000)" class="py-1 px-2 text-xs font-medium rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">+$25K</button>
-                                <button type="button" onclick="setAmount(100000)" class="py-1 px-2 text-xs font-medium rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">+$100K</button>
-                                <button type="button" onclick="setAmount(500000)" class="py-1 px-2 text-xs font-medium rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">+$500K</button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Settlement Status</label>
-                            <select id="statusSelect" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:border-slate-900 focus:bg-white font-medium">
-                                <option value="SETTLED">SETTLED (Immediate Finality)</option>
-                                <option value="PROCESSING">PROCESSING (Liquidity Check)</option>
-                                <option value="COMPLETED">COMPLETED (Audited Balance)</option>
-                            </select>
-                        </div>
-
-                        <div class="pt-2">
-                            <button type="submit" id="submitBtn" class="w-full py-2.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-colors shadow-sm">
-                                Dispatch Transaction
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="txNotice" class="hidden text-xs p-3.5 rounded-lg border mt-4"></div>
-            </section>
+      <!-- Operational status cluster -->
+      <div class="hidden xl:flex items-center gap-2 ml-3" aria-label="Operational status">
+        <div class="op-chip">
+          <span class="op-dot bg-emerald-400" style="animation:pulseDot 1.7s ease-out infinite"></span>
+          <div class="leading-none">
+            <div class="op-lbl">DB ENGINE</div>
+            <div class="op-val text-emerald-300 mt-[3px]">POSTGRES 16 · ONLINE</div>
+          </div>
         </div>
-    </main>
+        <div class="op-chip">
+          <span class="op-dot bg-sky-400"></span>
+          <div class="leading-none">
+            <div class="op-lbl">ENCRYPTION</div>
+            <div class="op-val text-sky-300 mt-[3px]">TLS 1.3 · ENFORCED</div>
+          </div>
+        </div>
+        <div class="op-chip">
+          <span class="op-dot bg-gold"></span>
+          <div class="leading-none">
+            <div class="op-lbl">ACTIVE NODE</div>
+            <div class="op-val text-gold-bright mt-[3px]">PRIMARY LEDGER</div>
+          </div>
+        </div>
+        <div class="op-chip" id="chipHealth" title="Live probe of /healthz">
+          <span class="op-dot bg-faint" id="healthDot"></span>
+          <div class="leading-none">
+            <div class="op-lbl">API HEALTH</div>
+            <div class="op-val text-dim mt-[3px]" id="healthVal">PROBING…</div>
+          </div>
+        </div>
+      </div>
 
-    <footer class="border-t border-slate-200 bg-white py-6 px-6 mt-16 text-center text-xs text-slate-400 font-medium">
-        <p>Sabay Premium Bank Banking Infrastructure Node &bull; Architecture Replatformed</p>
-    </footer>
+      <div class="ml-auto flex items-center gap-2 md:gap-3 shrink-0">
+        <div class="hidden md:block text-right mr-1 leading-none">
+          <div id="utcClock" class="font-mono tabnum text-[13.5px] text-ink">--:--:--</div>
+          <div id="utcDate" class="mt-[5px] font-mono text-[9px] tracking-[0.18em] text-faint">— UTC</div>
+        </div>
+        <a href="/docs" target="_blank" rel="noopener" class="btn-ghost" title="OpenAPI / Swagger documentation">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+          <span class="hidden sm:inline">API Docs</span>
+        </a>
+        <a href="/healthz" target="_blank" rel="noopener" class="btn-ghost" title="Service health probe endpoint">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span class="hidden sm:inline">Health Probe</span>
+        </a>
+        <a href="#dispatch" class="btn-gold hidden md:inline-flex" title="Jump to settlement dispatch terminal">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
+          New Settlement
+        </a>
+      </div>
+    </div>
+  </header>
 
-    <script>
-        function setAmount(val) {
-            document.getElementById('totalAmount').value = parseFloat(val).toFixed(2);
-        }
+  <!-- LIVE SETTLEMENT TAPE -->
+  <div class="border-b border-white/[0.05] bg-white/[0.015] overflow-hidden ticker" aria-hidden="true">
+    <div class="max-w-[1600px] mx-auto px-4 md:px-8 flex items-center gap-5 h-9">
+      <span class="shrink-0 inline-flex items-center gap-2 font-mono text-[9px] font-bold tracking-[0.24em] text-gold-bright">
+        <span class="live-dot"></span>LIVE SETTLEMENT TAPE
+      </span>
+      <div class="relative flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_4%,black_96%,transparent)]">
+        <div id="tickerTrack" class="ticker-track font-mono text-[10.5px] text-dim"></div>
+      </div>
+    </div>
+  </div>
 
-        // Live Table Search Filter
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
-            const rows = document.querySelectorAll('#ledgerTable tbody tr');
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
-        });
+  <main class="max-w-[1600px] mx-auto px-4 md:px-8 py-8 space-y-9">
 
-        // Form Submit Handler
-        document.getElementById('txForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const notice = document.getElementById('txNotice');
-            btn.disabled = true;
-            btn.innerText = 'Settling Transaction...';
-            
-            const payload = {
-                customer_id: parseInt(document.getElementById('customerId').value),
-                total_amount: parseFloat(document.getElementById('totalAmount').value),
-                status: document.getElementById('statusSelect').value
-            };
+    <!-- 01 · TREASURY OVERVIEW -->
+    <section aria-labelledby="kpi-heading">
+      <div class="flex items-end justify-between mb-5 gap-4">
+        <div>
+          <div class="font-mono text-[9.5px] font-bold tracking-[0.32em] text-gold/80 uppercase">01 · Treasury Overview</div>
+          <h1 id="kpi-heading" class="mt-2 font-display text-xl md:text-[22px] font-semibold tracking-tight text-ink">Institutional Settlement Metrics</h1>
+        </div>
+        <div class="hidden md:flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-faint">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          FY-2026 · Q4 · <span class="text-emerald-300">LIVE FEED</span>
+        </div>
+      </div>
 
-            try {
-                const res = await fetch('/api/v1/orders', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (res.ok) {
-                    const data = await res.json();
-                    notice.className = 'text-xs p-3.5 rounded-lg border bg-emerald-50 text-emerald-800 border-emerald-200 font-medium';
-                    notice.innerText = `Transaction TXN-${String(data.id).padStart(4, "0")} settled successfully. Reloading ledger...`;
-                    notice.classList.remove('hidden');
-                    setTimeout(() => window.location.reload(), 1000);
-                } else {
-                    throw new Error('Transaction rejected by database constraints');
-                }
-            } catch (err) {
-                notice.className = 'text-xs p-3.5 rounded-lg border bg-rose-50 text-rose-800 border-rose-200 font-medium';
-                notice.innerText = `Error: ${err.message}`;
-                notice.classList.remove('hidden');
-                btn.disabled = false;
-                btn.innerText = 'Dispatch Transaction';
-            }
-        });
-    </script>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <!-- KPI 1 · Gross Settled Capital -->
+        <div class="card card-hover hairline p-5 rise" style="animation-delay:.03s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="text-[10px] font-bold tracking-[0.16em] text-dim uppercase leading-4">Gross Settled<br/>Capital</div>
+            <div class="w-8 h-8 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-gold-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            </div>
+          </div>
+          <div class="mt-4 font-mono tabnum text-[26px] leading-none font-semibold text-ink" data-kpi="volume">{{TOTAL_VOLUME}}</div>
+          <div class="mt-2 text-[10px] text-faint tracking-wide">USD · AGGREGATE ACROSS ALL LEDGERS</div>
+          <div class="mt-4 h-10" data-spark="#E3B94E" aria-hidden="true"></div>
+        </div>
+
+        <!-- KPI 2 · Active Corporate Clients -->
+        <div class="card card-hover hairline p-5 rise" style="animation-delay:.08s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="text-[10px] font-bold tracking-[0.16em] text-dim uppercase leading-4">Active Corporate<br/>Clients</div>
+            <div class="w-8 h-8 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-gold-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
+          <div class="mt-4 font-mono tabnum text-[26px] leading-none font-semibold text-ink" data-kpi="clients">{{CUSTOMERS_COUNT}}</div>
+          <div class="mt-2 text-[10px] text-faint tracking-wide">VERIFIED CORPORATE ENTITIES</div>
+          <div class="mt-4 flex items-center">
+            <span class="monogram-mini bg-gradient-to-br from-amber-300/90 to-yellow-600/90 text-[#2A1F04]">A</span>
+            <span class="monogram-mini bg-gradient-to-br from-emerald-300/90 to-teal-600/90 text-[#03211A] -ml-2">G</span>
+            <span class="monogram-mini bg-gradient-to-br from-sky-300/90 to-blue-600/90 text-[#04182B] -ml-2">S</span>
+            <span class="ml-3 text-[9.5px] font-mono tracking-[0.14em] text-faint">ALL ENTITIES KYC-VERIFIED</span>
+          </div>
+        </div>
+
+        <!-- KPI 3 · Transaction Batches -->
+        <div class="card card-hover hairline p-5 rise" style="animation-delay:.13s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="text-[10px] font-bold tracking-[0.16em] text-dim uppercase leading-4">Transaction<br/>Batches</div>
+            <div class="w-8 h-8 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-gold-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+          </div>
+          <div class="mt-4 font-mono tabnum text-[26px] leading-none font-semibold text-ink" data-kpi="orders">{{ORDERS_COUNT}}</div>
+          <div class="mt-2 text-[10px] text-faint tracking-wide">SETTLEMENT INSTRUCTIONS PROCESSED</div>
+          <div class="mt-4 h-10" data-spark="#38BDF8" aria-hidden="true"></div>
+        </div>
+
+        <!-- KPI 4 · Settlement Finality Rate -->
+        <div class="card card-hover hairline p-5 rise" style="animation-delay:.18s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="text-[10px] font-bold tracking-[0.16em] text-dim uppercase leading-4">Settlement Finality<br/>Rate</div>
+            <div class="w-8 h-8 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-gold-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            </div>
+          </div>
+          <div class="mt-4 font-mono tabnum text-[26px] leading-none font-semibold text-ink" data-kpi="rate">{{SETTLEMENT_RATE}}</div>
+          <div class="mt-3 h-1 w-full rounded-full bg-white/[0.06] overflow-hidden">
+            <div id="rateBar" class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-300 transition-all duration-700" style="width:0%"></div>
+          </div>
+          <div class="mt-2 text-[10px] text-faint tracking-wide">SLA TARGET ≥ 99.50% · CLEARED + FINALISED</div>
+        </div>
+
+        <!-- KPI 5 · Mean Ticket Size -->
+        <div class="card card-hover hairline p-5 rise" style="animation-delay:.23s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="text-[10px] font-bold tracking-[0.16em] text-dim uppercase leading-4">Mean Ticket<br/>Size</div>
+            <div class="w-8 h-8 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-gold-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+            </div>
+          </div>
+          <div class="mt-4 font-mono tabnum text-[26px] leading-none font-semibold text-ink" data-kpi="avg">{{AVG_TXN}}</div>
+          <div class="mt-2 text-[10px] text-faint tracking-wide">PER SETTLEMENT INSTRUCTION · USD</div>
+          <div class="mt-4 h-10" data-spark="#34D399" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · SETTLEMENT ANALYTICS -->
+    <section aria-labelledby="analytics-heading">
+      <div class="flex items-end justify-between mb-5 gap-4">
+        <div>
+          <div class="font-mono text-[9.5px] font-bold tracking-[0.32em] text-gold/80 uppercase">02 · Settlement Analytics</div>
+          <h2 id="analytics-heading" class="mt-2 font-display text-xl md:text-[22px] font-semibold tracking-tight text-ink">Capital Flow Intelligence</h2>
+        </div>
+        <div class="hidden lg:flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-faint">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          COMPUTED FROM CONSOLIDATED LEDGER
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-5">
+        <div class="card p-5 xl:col-span-7 rise" style="animation-delay:.08s">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="text-[13px] font-display font-semibold text-ink">Settlement Velocity</div>
+              <div class="mt-1 text-[10.5px] text-faint tracking-wide">CLEARED VOLUME DISTRIBUTION · USD</div>
+            </div>
+            <div class="flex items-center gap-1 p-1 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+              <button type="button" class="tabbtn active" data-view="velocity">BY COUNTERPARTY</button>
+              <button type="button" class="tabbtn" data-view="flow">CYCLE TREND</button>
+            </div>
+          </div>
+          <div id="chartVelocity" class="mt-4 h-[250px]"></div>
+          <div id="chartFlow" class="mt-4 h-[250px] hidden"></div>
+          <div id="velocityLegend" class="mt-3 pt-3 border-t border-white/[0.05] flex flex-wrap items-center gap-x-5 gap-y-2"></div>
+        </div>
+
+        <div class="card p-5 xl:col-span-5 rise" style="animation-delay:.14s">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-[13px] font-display font-semibold text-ink">Ledger Composition</div>
+              <div class="mt-1 text-[10.5px] text-faint tracking-wide">STATUS DISTRIBUTION · LIVE RECOUNT</div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 text-gold-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-col sm:flex-row items-center gap-6">
+            <div class="relative shrink-0 w-[168px] h-[168px]">
+              <div id="donutSvg" class="w-full h-full"></div>
+              <div class="donut-center">
+                <div class="dc-num" id="donutTotal">0</div>
+                <div class="dc-lbl">INSTRUCTIONS</div>
+              </div>
+            </div>
+            <div class="flex-1 w-full min-w-0" id="donutLegend"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · LEDGER + DISPATCH -->
+    <section aria-labelledby="ledger-heading">
+      <div class="flex items-end justify-between mb-5 gap-4">
+        <div>
+          <div class="font-mono text-[9.5px] font-bold tracking-[0.32em] text-gold/80 uppercase">03 · Operations</div>
+          <h2 id="ledger-heading" class="mt-2 font-display text-xl md:text-[22px] font-semibold tracking-tight text-ink">Consolidated Transaction Ledger</h2>
+        </div>
+        <div class="hidden lg:flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-faint">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          LEDGER SEALED · IMMUTABLE APPEND-ONLY
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+        <div class="xl:col-span-8 card overflow-hidden rise" style="animation-delay:.08s">
+          <div class="p-4 border-b border-white/[0.05] flex flex-wrap items-center gap-3">
+            <div class="relative flex-1 min-w-[230px]">
+              <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-faint pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="ledgerSearch" type="text" autocomplete="off" spellcheck="false"
+                     class="field w-full h-10 pl-9 pr-12 text-[12.5px]"
+                     placeholder="Search holder, TXN reference, account…" aria-label="Search ledger"/>
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 kbd pointer-events-none">/</span>
+            </div>
+            <div id="statusChips" class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by status">
+              <button type="button" class="chip active" data-status="ALL">ALL <span class="chip-count" data-count="ALL">0</span></button>
+              <button type="button" class="chip" data-status="SETTLED">SETTLED <span class="chip-count" data-count="SETTLED">0</span></button>
+              <button type="button" class="chip" data-status="PROCESSING">PROCESSING <span class="chip-count" data-count="PROCESSING">0</span></button>
+              <button type="button" class="chip" data-status="COMPLETED">COMPLETED <span class="chip-count" data-count="COMPLETED">0</span></button>
+            </div>
+            <select id="acctFilter" class="field h-8 pl-2.5 pr-7 text-[11px] font-semibold" aria-label="Filter by account"></select>
+            <button type="button" id="exportCsv" class="btn-ghost !h-8 !px-2.5 text-[10.5px]" title="Export visible rows as CSV">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+              <span class="hidden md:inline">CSV</span>
+            </button>
+          </div>
+
+          <div class="overflow-auto scroll-slim max-h-[560px]">
+            <table class="w-full text-left border-collapse min-w-[880px]">
+              <thead class="sticky top-0 z-10 bg-panel/95 backdrop-blur border-b border-white/[0.08]">
+                <tr>
+                  <th class="px-4 py-3" scope="col"><button type="button" class="th" data-sort="ref">Reference</button></th>
+                  <th class="px-4 py-3" scope="col"><button type="button" class="th" data-sort="holder">Account Holder</button></th>
+                  <th class="px-4 py-3" scope="col"><button type="button" class="th" data-sort="acct">Account No.</button></th>
+                  <th class="px-4 py-3 text-right" scope="col"><button type="button" class="th" data-sort="amount">Amount (USD)</button></th>
+                  <th class="px-4 py-3" scope="col"><button type="button" class="th" data-sort="status">Status</button></th>
+                  <th class="px-4 py-3" scope="col"><button type="button" class="th" data-sort="ts">Timestamp</button></th>
+                </tr>
+              </thead>
+              <tbody id="ledgerBody">{{TABLE_ROWS}}
+                <tr id="emptyRow" hidden>
+                  <td colspan="6" class="px-4 py-14 text-center">
+                    <div class="inline-flex flex-col items-center gap-3">
+                      <div class="text-[13px] text-dim">No settlement instructions match the current query.</div>
+                      <button type="button" id="clearFilters" class="text-[10.5px] font-bold tracking-[0.16em] text-gold hover:text-gold-bright">CLEAR FILTERS</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="px-4 py-3 border-t border-white/[0.05] flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] tracking-[0.12em] text-faint">
+            <div id="ledgerMeta">SHOWING ALL INSTRUCTIONS</div>
+            <div>FINALITY: SETTLEMENTS ARE IRREVERSIBLE · ALL FIGURES USD</div>
+          </div>
+        </div>
+
+        <!-- Dispatch terminal -->
+        <aside class="xl:col-span-4 space-y-5">
+          <div id="dispatch" class="card hairline scroll-mt-24 rise" style="animation-delay:.12s">
+            <div class="px-5 py-4 border-b border-white/[0.06] flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-gold/10 border border-gold/25 flex items-center justify-center shrink-0">
+                <svg class="w-4.5 h-4.5 text-gold-bright" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></svg>
+              </div>
+              <div class="min-w-0">
+                <div class="text-[13.5px] font-display font-semibold text-ink">Settlement Dispatch</div>
+                <div class="mt-0.5 text-[10px] text-faint tracking-wide">CORE PAYMENT INSTRUCTION TERMINAL</div>
+              </div>
+              <div class="ml-auto flex items-center gap-2">
+                <span id="dispatchDot" class="op-dot bg-emerald-400" style="animation:pulseDot 1.7s ease-out infinite"></span>
+                <span id="dispatchState" class="font-mono text-[9.5px] font-bold tracking-[0.16em] text-emerald-300">READY</span>
+              </div>
+            </div>
+
+            <form id="dispatchForm" class="p-5 space-y-5" autocomplete="off" novalidate>
+              <div>
+                <label class="lbl" for="orderCustomer">Target Account <span class="req">*</span></label>
+                <div class="relative">
+                  <select id="orderCustomer" class="field appearance-none w-full h-11 pl-3 pr-10 font-medium text-[12.5px]">{{CUSTOMER_OPTIONS}}</select>
+                  <svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-faint pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+                <div id="acctMeta" class="mt-2 hidden font-mono text-[9.5px] tracking-[0.14em] text-faint"></div>
+              </div>
+
+              <div>
+                <label class="lbl" for="orderAmount">Amount (USD) <span class="req">*</span></label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-[14px] font-semibold text-gold pointer-events-none">$</span>
+                  <input id="orderAmount" type="text" inputmode="decimal" placeholder="0.00"
+                         class="field w-full h-11 pl-8 pr-3 font-mono tabnum text-[15px] font-semibold" aria-describedby="amountHint"/>
+                </div>
+                <div id="amountHint" class="mt-2 flex flex-wrap items-center gap-1.5">
+                  <button type="button" class="preset" data-add="5000">+ $5,000</button>
+                  <button type="button" class="preset" data-add="25000">+ $25,000</button>
+                  <button type="button" class="preset" data-add="100000">+ $100,000</button>
+                  <button type="button" class="preset" data-add="500000">+ $500,000</button>
+                  <button type="button" class="preset" id="presetClear" title="Clear amount">CLR</button>
+                </div>
+              </div>
+
+              <div>
+                <span class="lbl">Settlement Status</span>
+                <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-white/[0.03] border border-white/[0.07]" role="radiogroup" aria-label="Settlement status">
+                  <label>
+                    <input type="radio" name="orderStatus" value="SETTLED" class="sr-only" checked/>
+                    <span class="seg st-settled">SETTLED</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="orderStatus" value="PROCESSING" class="sr-only"/>
+                    <span class="seg st-processing">PROCESSING</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="orderStatus" value="COMPLETED" class="sr-only"/>
+                    <span class="seg st-completed">COMPLETED</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="rounded-xl border border-white/[0.07] bg-black/25 p-3.5 font-mono text-[10.5px] leading-relaxed text-dim min-h-[58px]" id="dispatchPreview" aria-live="polite">
+                <span class="text-faint">→ awaiting instruction parameters…</span>
+              </div>
+
+              <button id="dispatchBtn" type="submit" class="btn-gold w-full !h-11 text-[12px] tracking-[0.08em]">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span id="dispatchBtnLabel">AUTHORIZE &amp; DISPATCH SETTLEMENT</span>
+              </button>
+              <p class="font-mono text-[9.5px] tracking-[0.12em] text-faint text-center">POST /api/v1/orders · APPLICATION/JSON · TLS 1.3</p>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/[0.06] mt-6">
+    <div class="max-w-[1600px] mx-auto px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-3 font-mono text-[10px] tracking-[0.1em] text-faint">
+      <div class="flex items-center gap-2.5">
+        <svg width="16" height="16" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2.5 34.5 11v18L20 37.5 5.5 29V11L20 2.5Z" stroke="#E3B94E" stroke-width="2.6"/><path d="M13 15.5h14M13 20h14M13 24.5h9" stroke="#E3B94E" stroke-width="2.6" stroke-linecap="round"/></svg>
+        <span class="text-ink/70 font-display font-semibold tracking-[0.14em]">SABAY PREMIUM BANK</span>
+        <span>· CORE LEDGER SYSTEM</span>
+      </div>
+      <div class="text-center">ENGINE POSTGRESQL 16 · FASTAPI GATEWAY · ARCHITECTURE REPLATFORMED</div>
+      <div>© 2026 · ALL SETTLEMENTS FINAL</div>
+    </div>
+  </footer>
+
+  <div id="toasts" class="fixed top-20 right-4 md:right-6 z-[60] w-[320px] max-w-[calc(100vw-2rem)] space-y-3" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var $  = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var fmtUSD  = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  var fmtUSD0 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+    });
+  }
+  function parseMoney(str) {
+    if (typeof str !== 'string') return NaN;
+    var m = String(str).replace(/,/g, '').match(/-?\d+(?:\.\d+)?/);
+    return m ? parseFloat(m[0]) : NaN;
+  }
+  function compact(n) {
+    if (!isFinite(n)) return '—';
+    var a = Math.abs(n);
+    if (a >= 1e9) return '$' + (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+    if (a >= 1e6) return '$' + (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (a >= 1e3) return '$' + (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+    return fmtUSD0.format(n);
+  }
+  function tsFormat(d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+           ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+  function shortName(name) { return String(name || '').trim().split(/\s+/)[0] || '—'; }
+
+  var STATUS = {
+    SETTLED:    { cls: 'pill-settled',    color: '#34D399', label: 'Settled' },
+    COMPLETED:  { cls: 'pill-completed',  color: '#38BDF8', label: 'Completed' },
+    PROCESSING: { cls: 'pill-processing', color: '#FBBF24', label: 'Processing' }
+  };
+  var STATUS_KEYS = ['SETTLED', 'PROCESSING', 'COMPLETED'];
+  function detectStatus(t) {
+    var m = String(t || '').toUpperCase();
+    if (m.indexOf('PROCESSING') > -1) return 'PROCESSING';
+    if (m.indexOf('COMPLETED')  > -1) return 'COMPLETED';
+    if (m.indexOf('SETTLED')    > -1) return 'SETTLED';
+    return null;
+  }
+
+  var state = { records: [], q: '', status: 'ALL', acct: 'ALL', sortKey: null, sortDir: 1 };
+  var CLIENTS = [
+    { acct: 'ACCT-001', name: 'Acme Industrial Supplies', tone: 'gold' },
+    { acct: 'ACCT-002', name: 'Globex Logistics Corp',    tone: 'emerald' },
+    { acct: 'ACCT-003', name: 'Soylent Foods Ltd',        tone: 'sky' }
+  ];
+  var CHART_COLORS = ['#34D399', '#38BDF8', '#E3B94E'];
+  var TONES = {
+    gold:    'from-amber-300/90 to-yellow-600/90 text-[#2A1F04]',
+    emerald: 'from-emerald-300/90 to-teal-600/90 text-[#03211A]',
+    sky:     'from-sky-300/90 to-blue-600/90 text-[#04182B]'
+  };
+
+  var tbody        = $('#ledgerBody');
+  var emptyRow     = $('#emptyRow');
+  var searchInput  = $('#ledgerSearch');
+  var acctFilter   = $('#acctFilter');
+  var selCustomer  = $('#orderCustomer');
+  var amountInput  = $('#orderAmount');
+  var dispatchForm = $('#dispatchForm');
+  var dispatchBtn  = $('#dispatchBtn');
+  var previewBox   = $('#dispatchPreview');
+
+  function toast(type, title, msg) {
+    var t = document.createElement('div');
+    t.className = 'toast toast-' + type;
+    t.innerHTML = '<div class="flex-1 min-w-0"><div class="text-[12.5px] font-semibold text-ink leading-snug">' + esc(title) + '</div>' +
+      (msg ? '<div class="mt-1 text-[11px] text-dim leading-snug break-words">' + esc(msg) + '</div>' : '') + '</div>';
+    $('#toasts').appendChild(t);
+    setTimeout(function () { t.remove(); }, 4000);
+  }
+
+  function toneForAcct(acct) {
+    for (var i = 0; i < CLIENTS.length; i++) if (CLIENTS[i].acct === acct) return CLIENTS[i].tone;
+    return 'gold';
+  }
+
+  function recordsFromDOM() {
+    var rows = $$('tr', tbody).filter(function (tr) { return tr.id !== 'emptyRow'; });
+    return rows.map(function (tr, i) {
+      var text = tr.textContent || '';
+      var ref    = (text.match(/TXN-[A-Z0-9-]{2,}/i) || [])[0] || ('TXN-' + String(1000 + i));
+      var acct   = ((text.match(/ACCT-\d{1,6}/i) || [])[0] || '').toUpperCase();
+      var amtM   = text.match(/\$\s?[\d,]+(?:\.\d{1,2})?/);
+      var amount = amtM ? parseMoney(amtM[0]) : 0;
+      var status = detectStatus(text) || 'SETTLED';
+      var ts     = (text.match(/\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}(?::\d{2})?)?/) || [])[0] || '';
+      var holder = '';
+      for (var k = 0; k < CLIENTS.length; k++) {
+        if (text.indexOf(CLIENTS[k].name) > -1) { holder = CLIENTS[k].name; break; }
+      }
+      if (!holder) holder = acct || 'Corporate Entity';
+      return { ref: ref, holder: holder, acct: acct, amount: isFinite(amount) ? amount : 0,
+               status: status, ts: ts, tone: toneForAcct(acct), rowEl: tr };
+    });
+  }
+
+  function applyFilters() {
+    var q = state.q.trim().toLowerCase();
+    var visible = 0;
+    state.records.forEach(function (r) {
+      var hay = (r.ref + ' ' + r.holder + ' ' + r.acct).toLowerCase();
+      var ok = (!q || hay.indexOf(q) > -1) &&
+               (state.status === 'ALL' || r.status === state.status) &&
+               (state.acct === 'ALL' || r.acct === state.acct);
+      r.rowEl.hidden = !ok;
+      if (ok) visible++;
+    });
+    emptyRow.hidden = visible !== 0;
+    $('#ledgerMeta').textContent = 'SHOWING ' + visible + ' / ' + state.records.length + ' INSTRUCTIONS';
+  }
+
+  function updateChips() {
+    var counts = { ALL: state.records.length, SETTLED: 0, PROCESSING: 0, COMPLETED: 0 };
+    state.records.forEach(function (r) { if (counts[r.status] != null) counts[r.status]++; });
+    $$('[data-count]').forEach(function (el) { el.textContent = counts[el.getAttribute('data-count')] || 0; });
+  }
+
+  function labelFor(key) {
+    for (var i = 0; i < CLIENTS.length; i++) if (CLIENTS[i].acct === key) return CLIENTS[i].name;
+    return key;
+  }
+
+  function renderVelocity() {
+    var el = $('#chartVelocity');
+    var sums = {}, cnts = {};
+    state.records.forEach(function (r) {
+      var k = r.acct || r.holder || '—';
+      sums[k] = (sums[k] || 0) + (r.amount || 0);
+      cnts[k] = (cnts[k] || 0) + 1;
+    });
+    var keys = Object.keys(sums);
+    var W = 640, H = 250, padL = 52, padR = 14, padT = 30, padB = 34;
+    var iw = W - padL - padR, ih = H - padT - padB;
+    var max = 1; keys.forEach(function (k) { if (sums[k] > max) max = sums[k]; });
+
+    var grid = '';
+    for (var g = 0; g <= 3; g++) {
+      var v = max * g / 3, y = padT + ih - ih * g / 3;
+      grid += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="rgba(232,238,249,0.06)"/>' +
+              '<text x="' + (padL - 8) + '" y="' + (y + 3) + '" text-anchor="end" class="ct">' + compact(v) + '</text>';
+    }
+
+    var bars = '';
+    var bw = Math.min(72, iw / Math.max(keys.length, 1) * 0.46);
+    keys.forEach(function (k, i) {
+      var c = CHART_COLORS[i % CHART_COLORS.length];
+      var h = Math.max(5, ih * sums[k] / max);
+      var x = padL + iw * (i + 0.5) / keys.length - bw / 2;
+      var y = padT + ih - h;
+      var nm = shortName(labelFor(k));
+      bars += '<g class="bar-g">' +
+        '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" rx="7" fill="' + c + '" fill-opacity="0.2"/>' +
+        '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="3.5" rx="1.75" fill="' + c + '"/>' +
+        '<text x="' + (x + bw / 2) + '" y="' + (y - 9) + '" text-anchor="middle" class="cv">' + compact(sums[k]) + '</text>' +
+        '<text x="' + (x + bw / 2) + '" y="' + (H - 12) + '" text-anchor="middle" class="cl">' + esc(nm) + '</text></g>';
+    });
+
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="w-full h-full">' + grid + bars + '</svg>';
+    $('#velocityLegend').innerHTML = keys.map(function (k, i) {
+      return '<span class="lg-item"><span class="lg-dot" style="background:' + CHART_COLORS[i % 3] + '"></span>' +
+        esc(shortName(labelFor(k))) + '<span class="lg-val">' + fmtUSD0.format(sums[k]) + '</span></span>';
+    }).join('');
+  }
+
+  function renderDonut() {
+    var counts = {}, total = 0;
+    state.records.forEach(function (r) { counts[r.status] = (counts[r.status] || 0) + 1; total++; });
+    var R = 58, C = 2 * Math.PI * R, off = 0, segs = '';
+    ['SETTLED', 'COMPLETED', 'PROCESSING'].forEach(function (s) {
+      var n = counts[s] || 0;
+      if (!n) return;
+      var len = C * n / Math.max(total, 1);
+      segs += '<circle cx="80" cy="80" r="' + R + '" fill="none" stroke="' + STATUS[s].color + '" stroke-width="14" ' +
+        'stroke-dasharray="' + len.toFixed(2) + ' ' + (C - len).toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '"/>';
+      off += len;
+    });
+    $('#donutSvg').innerHTML = '<svg viewBox="0 0 160 160" class="w-full h-full -rotate-90">' +
+      '<circle cx="80" cy="80" r="' + R + '" fill="none" stroke="rgba(232,238,249,0.05)" stroke-width="14"/>' + segs + '</svg>';
+    $('#donutTotal').textContent = total;
+  }
+
+  function renderSpark(el, color) {
+    var W = 200, H = 40, N = 18;
+    var pts = [];
+    for (var i = 0; i < N; i++) pts.push([W * i / (N - 1), 4 + Math.random() * (H - 8)]);
+    var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join('');
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="w-full h-full">' +
+      '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  }
+
+  function renderTicker() {
+    var track = $('#tickerTrack');
+    var items = state.records.slice(0, 10).map(function (r) {
+      return '<span class="inline-flex items-center gap-2">' +
+        '<span class="text-ink/80">' + esc(r.ref) + '</span>' +
+        '<span class="text-faint">' + esc(shortName(r.holder)) + '</span>' +
+        '<span class="text-gold-bright">' + fmtUSD.format(r.amount) + '</span></span>';
+    });
+    track.innerHTML = '<span class="ticker-half">' + items.join(' · ') + '</span>';
+  }
+
+  function updatePreview() {
+    var opt = selCustomer.selectedOptions && selCustomer.selectedOptions[0];
+    var amount = parseMoney(amountInput.value);
+    var st = (dispatchForm.querySelector('input[name="orderStatus"]:checked') || {}).value || 'SETTLED';
+    if (!opt || !isFinite(amount) || amount <= 0) {
+      previewBox.innerHTML = '<span class="text-faint">→ awaiting instruction parameters…</span>';
+      return;
+    }
+    previewBox.innerHTML = '→ <span class="text-ink">' + esc(opt.textContent) + '</span><br/>AMOUNT <span class="text-emerald-300">' + fmtUSD.format(amount) + '</span> · STATUS <span class="text-gold-bright">' + esc(st) + '</span>';
+  }
+
+  /* Form dispatch aligned to backend FastAPI schema */
+  dispatchForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var opt = selCustomer.selectedOptions && selCustomer.selectedOptions[0];
+    var custId = parseInt(opt ? opt.value : '1') || 1;
+    var amount = parseMoney(amountInput.value);
+    var st = (dispatchForm.querySelector('input[name="orderStatus"]:checked') || {}).value || 'SETTLED';
+
+    if (!isFinite(amount) || amount <= 0) {
+      toast('error', 'Invalid amount', 'Enter a settlement amount greater than $0.00.');
+      return;
+    }
+
+    dispatchBtn.disabled = true;
+    dispatchBtn.innerText = 'AUTHORIZING SETTLEMENT...';
+
+    /* Exact payload matching FastAPI OrderCreate schema */
+    var payload = {
+      customer_id: custId,
+      total_amount: amount,
+      status: st
+    };
+
+    try {
+      var res = await fetch('/api/v1/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        var data = await res.json();
+        toast('success', 'Settlement Authorized', 'Transaction TXN-' + String(data.id).padStart(4, '0') + ' settled successfully.');
+        setTimeout(function () { window.location.reload(); }, 1200);
+      } else {
+        throw new Error('Settlement rejected by core database constraints');
+      }
+    } catch (err) {
+      toast('error', 'Dispatch Rejected', err.message);
+      dispatchBtn.disabled = false;
+      dispatchBtn.innerText = 'AUTHORIZE & DISPATCH SETTLEMENT';
+    }
+  });
+
+  $$('.preset[data-add]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var add = parseFloat(b.getAttribute('data-add')) || 0;
+      var cur = parseMoney(amountInput.value) || 0;
+      amountInput.value = (cur + add).toFixed(2);
+      updatePreview();
+    });
+  });
+  $('#presetClear').addEventListener('click', function () {
+    amountInput.value = '';
+    updatePreview();
+  });
+  amountInput.addEventListener('input', updatePreview);
+  selCustomer.addEventListener('change', updatePreview);
+  $$('input[name="orderStatus"]').forEach(function (r) { r.addEventListener('change', updatePreview); });
+
+  searchInput.addEventListener('input', function () {
+    state.q = searchInput.value;
+    applyFilters();
+  });
+  $('#statusChips').addEventListener('click', function (e) {
+    var btn = e.target.closest('.chip');
+    if (!btn) return;
+    state.status = btn.getAttribute('data-status');
+    $$('#statusChips .chip').forEach(function (c) { c.classList.toggle('active', c === btn); });
+    applyFilters();
+  });
+
+  function tickClock() {
+    var d = new Date();
+    $('#utcClock').textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
+    $('#utcDate').textContent = d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + ' UTC';
+  }
+
+  function probeHealth() {
+    fetch('/healthz', { cache: 'no-store' }).then(function (res) {
+      var dot = $('#healthDot'), val = $('#healthVal');
+      if (res.ok) {
+        dot.className = 'op-dot bg-emerald-400';
+        val.textContent = 'HTTP 200 · HEALTHY';
+      } else {
+        dot.className = 'op-dot bg-amber-400';
+        val.textContent = 'DEGRADED';
+      }
+    }).catch(function () {
+      $('#healthVal').textContent = 'STANDBY';
+    });
+  }
+
+  function boot() {
+    state.records = recordsFromDOM();
+    updateChips();
+    applyFilters();
+    renderVelocity();
+    renderDonut();
+    renderTicker();
+    updatePreview();
+    $$('[data-spark]').forEach(function (el) { renderSpark(el, el.getAttribute('data-spark')); });
+    tickClock();
+    setInterval(tickClock, 1000);
+    probeHealth();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
 </body>
 </html>

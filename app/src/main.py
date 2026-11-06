@@ -31,26 +31,22 @@ def banking_dashboard(db: Session = Depends(get_db)):
     
     rows_html = ""
     for o in orders:
-        badge_style = "bg-emerald-50 text-emerald-700 border border-emerald-200/70" if o.status in ["COMPLETED", "SETTLED"] else "bg-amber-50 text-amber-700 border border-amber-200/70"
+        badge_cls = "pill-settled" if o.status == "SETTLED" else ("pill-completed" if o.status == "COMPLETED" else "pill-processing")
         cust_name = o.customer.name if o.customer else f"Account #{o.customer_id}"
-        date_str = o.created_at.strftime("%b %d, %Y at %H:%M UTC") if o.created_at else "Pending"
+        date_str = o.created_at.strftime("%Y-%m-%d %H:%M:%S") if o.created_at else "Pending"
         
         rows_html += f"""
-        <tr class="border-b border-slate-100 hover:bg-slate-50/80 transition-colors">
-            <td class="py-3.5 px-4 font-mono text-xs text-slate-500 font-semibold">TXN-{o.id:04d}</td>
-            <td class="py-3.5 px-4">
-                <div class="font-medium text-slate-900 text-sm">{cust_name}</div>
-                <div class="text-[11px] font-mono text-slate-400">ACCT-00{o.customer_id}</div>
-            </td>
-            <td class="py-3.5 px-4 font-mono font-semibold text-slate-900 text-sm">${float(o.total_amount):,.2f}</td>
-            <td class="py-3.5 px-4">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {badge_style}">{o.status}</span>
-            </td>
-            <td class="py-3.5 px-4 text-xs text-slate-500 font-mono">{date_str}</td>
+        <tr class="ledger-row border-b border-white/[0.045] hover:bg-white/[0.03]">
+            <td class="px-4 py-3 whitespace-nowrap font-mono text-[12.5px] text-ink/90">TXN-{o.id:04d}</td>
+            <td class="px-4 py-3 text-[13px] font-medium text-ink">{cust_name}</td>
+            <td class="px-4 py-3 font-mono text-[11.5px] text-dim whitespace-nowrap">ACCT-00{o.customer_id}</td>
+            <td class="px-4 py-3 text-right font-mono tabnum text-[13.5px] font-semibold text-ink">${float(o.total_amount):,.2f}</td>
+            <td class="px-4 py-3"><span class="pill {badge_cls}"><span class="pill-dot"></span>{o.status}</span></td>
+            <td class="px-4 py-3 font-mono tabnum text-[11px] text-faint whitespace-nowrap">{date_str}</td>
         </tr>
         """
         
-    options_html = "".join([f"<option value='{c.id}'>{c.name} (ACCT-00{c.id})</option>" for c in customers])
+    options_html = "".join([f"<option value='{c.id}'>{c.name} · ACCT-00{c.id}</option>" for c in customers])
     
     if not TEMPLATE_FILE.exists():
         return HTMLResponse(content="<h1>Dashboard template missing</h1>", status_code=500)
@@ -62,7 +58,7 @@ def banking_dashboard(db: Session = Depends(get_db)):
         .replace("{{ORDERS_COUNT}}", str(order_count))
         .replace("{{SETTLEMENT_RATE}}", f"{settlement_rate:.1f}%")
         .replace("{{AVG_TXN}}", f"${float(avg_ticket):,.2f}")
-        .replace("{{TABLE_ROWS}}", rows_html if rows_html else "<tr><td colspan='5' class='py-8 text-center text-slate-400 text-sm'>No transactions recorded yet.</td></tr>")
+        .replace("{{TABLE_ROWS}}", rows_html if rows_html else "<tr><td colspan='6' class='py-8 text-center text-slate-500 text-sm'>No records found.</td></tr>")
         .replace("{{CUSTOMER_OPTIONS}}", options_html)
     )
     return HTMLResponse(content=rendered)
