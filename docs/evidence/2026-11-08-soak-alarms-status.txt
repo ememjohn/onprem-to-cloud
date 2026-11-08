@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------
+|                               DescribeAlarms                                |
++----------------------------+---------------------------------------+--------+
+|           Metric           |                 Name                  | State  |
++----------------------------+---------------------------------------+--------+
+|  HTTPCode_Target_5XX_Count |  sabay-bank-dev-high-5xx-errors       |  OK    |
+|  DatabaseConnections       |  sabay-bank-dev-rds-zero-connections  |  OK    |
+|  UnHealthyHostCount        |  sabay-bank-dev-unhealthy-hosts       |  OK    |
++----------------------------+---------------------------------------+--------+

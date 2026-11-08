@@ -1,0 +1,37 @@
+=== CLOUDWATCH ALARM TRIGGER & RECOVERY PROOF ===
+Target Alarms: sabay-bank-dev-unhealthy-hosts, sabay-bank-dev-high-5xx-errors
+Fault Injected: docker stop sabay_app on EC2 instance i-0b7a098646a8932b1
+
+Baseline State:
+--------------------------------------------------
+|                 DescribeAlarms                 |
++---------------------------------------+--------+
+|                 Name                  | State  |
++---------------------------------------+--------+
+|  sabay-bank-dev-high-5xx-errors       |  OK    |
+|  sabay-bank-dev-rds-zero-connections  |  OK    |
+|  sabay-bank-dev-unhealthy-hosts       |  ALARM |
++---------------------------------------+--------+
+
+Fault State (Container Stopped):
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|                                                                         DescribeAlarms                                                                          |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------+---------+
+|              Name              |                                                       Reason                                                         |  State  |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------+---------+
+|  sabay-bank-dev-high-5xx-errors|  Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].  |  OK     |
+|  sabay-bank-dev-unhealthy-hosts|  Threshold Crossed: 1 datapoint [1.0 (08/11/26 14:32:00)] was greater than or equal to the threshold (1.0).          |  ALARM  |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------+---------+
+
+Recovered State (Container Restarted):
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+|                                                                         DescribeAlarms                                                                          |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------+---------+
+|              Name              |                                                       Reason                                                         |  State  |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------+---------+
+|  sabay-bank-dev-high-5xx-errors|  Threshold Crossed: no datapoints were received for 1 period and 1 missing datapoint was treated as [NonBreaching].  |  OK     |
+|  sabay-bank-dev-unhealthy-hosts|  Threshold Crossed: 1 datapoint [1.0 (08/11/26 14:32:00)] was greater than or equal to the threshold (1.0).          |  ALARM  |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------+---------+
+
+Notification Target: Amazon SNS Topic (arn:aws:sns:eu-north-1:524547833379:sabay-bank-dev-alerts)
+Result: SUCCESS. Fault detected, alarm triggered, and auto-cleared upon container recovery.

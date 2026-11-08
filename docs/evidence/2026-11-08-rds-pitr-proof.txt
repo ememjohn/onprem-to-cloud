@@ -1,0 +1,8 @@
+=== RDS POINT IN TIME RESTORE VERIFICATION ===
+Source Instance: sabay-bank-dev-postgres
+Restored Instance: sabay-bank-restore-test
+Target Point in Time: 2026-11-08T11:15:21+00:00
+Measured Restore Duration: 1318 seconds
+Restored Endpoint: sabay-bank-restore-test.cti602o8q50n.eu-north-1.rds.amazonaws.com
+Verification Status: SUCCESS (Instance reached available state)
+Teardown: Triggered deletion of sabay-bank-restore-test (costs eliminated).

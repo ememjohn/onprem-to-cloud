@@ -1,0 +1,16 @@
+=== HARDENING VERIFICATION: IMDSv2 AND ENCRYPTION AT REST ===
+
+1. Amazon EC2 Compute Host:
+- Instance ID: i-0b7a098646a8932b1
+- IMDSv2 Enforcement (HttpTokens): required (EXPECTED: required)
+- Root EBS Volume ID: vol-0ff63085cc9c4c4f3
+- EBS Storage Encrypted: True (EXPECTED: True)
+- EBS KMS Key ARN: arn:aws:kms:eu-north-1:524547833379:key/23125ae9-fa1e-448c-9b14-a4272f9c5cc8
+
+2. Amazon RDS Persistence Engine:
+- Database Identifier: sabay-bank-dev-postgres
+- Engine Version: postgres 16.10
+- Storage Encrypted: True (EXPECTED: True)
+- RDS KMS Key ARN: arn:aws:kms:eu-north-1:524547833379:key/1c324622-651d-4f67-a060-c02917b222fc
+
+Status: VERIFIED. IMDSv2 is strictly required. Storage at rest is encrypted with AWS KMS.

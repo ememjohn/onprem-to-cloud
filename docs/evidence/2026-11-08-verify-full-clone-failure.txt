@@ -1,0 +1,9 @@
+Incident: Deployment Script Failed on Fresh Instance
+Timestamp: 2026-11-08T09:37:00Z
+Error:
+bash: line 7: cd: /home/ec2-user/onprem-to-cloud/app: No such file or directory
+failed to run commands: exit status 1
+Root Cause:
+The remote deployment script omitted git clone, causing the cd command to fail on a newly provisioned instance.
+Remediation:
+Add automated git clone step prior to directory navigation.

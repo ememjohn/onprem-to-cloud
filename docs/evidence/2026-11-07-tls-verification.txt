@@ -1,0 +1,12 @@
+=== 1. VERIFYING HTTP TO HTTPS REDIRECT ===
+< HTTP/1.1 301 Moved Permanently
+< Server: awselb/2.0
+< Location: https://bank.saphigen.com:443/
+
+=== 2. OPENSSL TLS HANDSHAKE VERIFICATION ===
+Server certificate
+New, TLSv1.3, Cipher is TLS_AES_128_GCM_SHA256
+
+=== 3. HTTPS CURL PROBE ===
+< HTTP/2 502 
+< content-type: text/html

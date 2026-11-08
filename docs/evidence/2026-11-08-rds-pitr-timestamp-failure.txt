@@ -1,0 +1,8 @@
+Incident: Point in Time Restore Script Infinite Polling Loop
+Timestamp: 2026-11-08T11:20:00Z
+Error:
+InvalidParameterValue: RestoreTime must be between EarliestRestorableTime and LatestRestorableTime.
+Root Cause:
+The execution script passed current UTC time (now) instead of querying LatestRestorableTime. Amazon RDS WAL segment archiving latency causes LatestRestorableTime to lag several minutes behind real time. The creation call failed silently, leaving the script polling a non-existent database identifier.
+Remediation:
+Extract LatestRestorableTime directly from describe-db-instances and pass that exact timestamp to restore-db-instance-to-point-in-time.
