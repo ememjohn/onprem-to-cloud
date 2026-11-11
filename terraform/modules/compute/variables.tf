@@ -35,3 +35,9 @@ variable "instance_type" {
   type        = string
   default     = "t3.small"
 }
+
+variable "domain_name" {
+  description = "Target subdomain for ACM certificate"
+  type        = string
+  default     = "bank.saphigen.com"
+}

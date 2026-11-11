@@ -7,42 +7,34 @@ Evaluation of AWS Application Migration Service (MGN) vs Automated Container Reb
 Accepted
 
 ## Context
-Sabay Premium Bank operates an on premises core banking ledger running on a physical Linux server. As part of the cloud transformation roadmap, the engineering team evaluated server level rehosting using AWS Application Migration Service (AWS MGN) compared to our implemented strategy of automated container deployment via HashiCorp Terraform and Amazon Linux 2023.
+Sabay Premium Bank operates an on premises core banking ledger running on a physical Linux server. As part of the cloud transformation roadmap, I evaluated server level rehosting using AWS Application Migration Service (AWS MGN) compared to my implemented strategy of automated container deployment via HashiCorp Terraform and Amazon Linux 2023.
 
-## Evaluation of AWS Application Migration Service (MGN)
+## Decision Drivers
+1. Operating System Hygiene: Avoid transferring legacy operating system clutter, outdated packages, and unpatched CVEs into AWS.
+2. Infrastructure as Code Alignment: Maintain 100 percent of cloud infrastructure inside reviewable, version controlled Terraform code.
+3. Attack Surface Reduction: Avoid replicating legacy SSH keys and configuration files.
+4. Workstation Safety: Avoid installing block level kernel drivers on developer workstations.
 
-### 1. Architectural Mechanism
-AWS MGN provides non disruptive continuous block level replication:
-1. An AWS Replication Agent installs directly into the source Linux kernel.
-2. The agent intercepts storage I/O at the block layer and streams compressed disk blocks across outbound TCP port 1500 to a dedicated staging VPC area.
-3. A lightweight replication instance attaches staging EBS volumes matching each source disk partition.
-4. During cutover, AWS MGN creates point in time EBS snapshots and automatically launches the target Amazon EC2 instance with AWS driver injection.
+## Evaluated Alternatives
 
-### 2. When AWS MGN is the Optimal Enterprise Choice
-1. Legacy Monoliths with Complex Dependencies: Systems with undocumented OS configurations, proprietary binary dependencies, or specialized middleware where rebuilding from code is high risk.
-2. Large Scale Datacenter Evacuation: Enterprise migrations moving hundreds or thousands of legacy virtual machines simultaneously under tight datacenter lease exit deadlines.
-3. Stateful Compute Servers: Legacy servers where application compute and file system storage cannot be decoupled.
+### 1. Block Level Server Rehosting via AWS MGN
+I evaluated AWS MGN. It provides continuous block level disk replication by installing an agent into the source Linux kernel. During cutover, it launches an exact clone of the source server on EC2. However, installing the agent on my workstation would have attempted to mirror my entire physical hard drive to AWS EBS volumes, costing substantial storage fees. Furthermore, block level cloning transfers legacy operating system technical debt directly into the cloud.
 
-### 3. Tradeoff Comparison Matrix
-| Architectural Dimension | Block Level Rehosting (AWS MGN) | Automated Container Rebuilding (Selected) |
-| :--- | :--- | :--- |
-| OS Hygiene and Security | Replicates legacy operating system bloat, obsolete packages, and unpatched CVEs | Clean minimal Amazon Linux 2023 baseline with zero legacy clutter |
-| Infrastructure as Code Alignment | Creates opaque unmanaged EC2 disk clones outside Terraform state | 100 percent declared, reviewable, reproducible Terraform modules |
-| Administrative Surface | Replicates legacy SSH keys and configuration files | Zero open SSH ports, managed exclusively via AWS Systems Manager |
-| Modernization Readiness | Leaves workload coupled to traditional virtual machine constructs | Prepares services for immediate microservices containerization on EKS |
-| Continuous Staging Cost | Requires persistent replication servers and EBS staging volumes | Zero standing replication storage costs |
+### 2. Automated Container Rebuilding on Amazon EC2
+I selected automated container rebuilding. Because the core ledger application was already cleanly containerized and its relational state was isolated into PostgreSQL, moving the entire physical server disk was unnecessary. Container rebuilding provides immutability, cleaner security boundaries, and immediate alignment with our Kubernetes modernization roadmap.
 
-## Decision
-For Sabay Premium Bank, we reject block level server rehosting via AWS MGN in favor of automated container rebuilding on Amazon EC2 with Terraform.
+## My Decision
+I rejected block level server rehosting via AWS MGN in favor of automated container rebuilding on Amazon EC2 with Terraform.
 
-Because the core ledger application is already cleanly containerized and its relational state is isolated into PostgreSQL, moving the entire physical server disk introduces unnecessary operational risk, storage expenses, and legacy technical debt. Container rebuilding provides immutability, cleaner security boundaries, and immediate alignment with our Phase 9 modernization path on Amazon EKS.
+I provisioned a clean minimal Amazon Linux 2023 instance using Terraform. I deployed the application container via AWS Systems Manager without open SSH ports, and replatformed persistence to Amazon RDS PostgreSQL.
 
 ## Consequences
-Positive:
+
+### Positive
 1. Zero legacy operating system technical debt transferred into AWS.
 2. Complete infrastructure reproducibility declared in version controlled Terraform code.
 3. Avoided continuous EBS staging volume costs and dedicated replication server overhead.
-4. Seamless progression toward microservices modernization on Kubernetes.
+4. Clean progression toward microservices modernization on Kubernetes.
 
-Negative:
+### Negative
 1. Rebuilding requires maintaining application Dockerfiles and deployment automation scripts rather than performing automated disk imaging.

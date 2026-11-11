@@ -21,3 +21,9 @@ variable "vpc_cidr" {
   type        = string
   default     = "10.0.0.0/16"
 }
+
+variable "alert_email" {
+  description = "Email recipient for CloudWatch alarm notifications"
+  type        = string
+  default     = "officialememjohn@gmail.com"
+}

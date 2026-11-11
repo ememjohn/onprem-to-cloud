@@ -24,3 +24,9 @@ variable "db_instance_id" {
   description = "Identifier of the RDS instance for CloudWatch metrics"
   type        = string
 }
+
+variable "alert_email" {
+  description = "Email address for CloudWatch alarm notifications"
+  type        = string
+  default     = "alerts@saphigen.com"
+}

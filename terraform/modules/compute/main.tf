@@ -78,6 +78,11 @@ resource "aws_instance" "app_host" {
   associate_public_ip_address = true
 
   user_data = local.user_data
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
 
   root_block_device {
     volume_size           = 20
@@ -151,10 +156,58 @@ resource "aws_lb" "external" {
 }
 
 # Ingress Listener on Port 80 forwarding to Target Group
+
+# ACM Certificate for HTTPS
+resource "aws_acm_certificate" "cert" {
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-acm-cert"
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Port 80 Listener: Redirect to HTTPS Port 443
+
+# Port 80 Listener: Forwarding to Target Group
+# Port 80 Listener: Redirect to HTTPS Port 443
+# Port 80 Listener: Redirect to HTTPS Port 443
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.external.arn
   port              = 80
   protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-http-redirect"
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+  }
+}
+
+
+# Port 443 Listener with AWS TLS 1.3 Policy
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.external.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = aws_acm_certificate.cert.arn
 
   default_action {
     type             = "forward"
@@ -162,8 +215,11 @@ resource "aws_lb_listener" "http" {
   }
 
   tags = {
-    Name        = "${var.project_name}-${var.environment}-http-listener"
+    Name        = "${var.project_name}-${var.environment}-https-listener"
     Environment = var.environment
     ManagedBy   = "Terraform"
   }
 }
+
+
+

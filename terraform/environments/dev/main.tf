@@ -69,4 +69,5 @@ module "monitoring" {
   alb_arn_suffix          = module.compute.alb_arn_suffix
   target_group_arn_suffix = module.compute.target_group_arn_suffix
   db_instance_id          = module.database.db_instance_id
+  alert_email             = var.alert_email
 }

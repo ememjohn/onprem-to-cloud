@@ -40,6 +40,12 @@ resource "aws_db_parameter_group" "postgres_dms" {
     value        = "1"
     apply_method = "pending-reboot"
   }
+  parameter {
+    name         = "rds.force_ssl"
+    value        = "1"
+    apply_method = "pending-reboot"
+  }
+
 
   tags = {
     Name        = "${var.project_name}-${var.environment}-pg16-dms-params"

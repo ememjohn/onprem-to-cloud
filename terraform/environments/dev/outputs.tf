@@ -57,3 +57,8 @@ output "ec2_private_ip" {
   description = "Private IP of Application Host"
   value       = module.compute.ec2_private_ip
 }
+
+output "acm_validation_records" {
+  description = "DNS CNAME records required for ACM certificate validation"
+  value       = module.compute.acm_validation_records
+}
