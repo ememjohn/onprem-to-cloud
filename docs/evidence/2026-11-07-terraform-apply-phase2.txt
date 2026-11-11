@@ -1342,19 +1342,19 @@ Changes to Outputs:
 [0m[1mmodule.monitoring.aws_sns_topic.alerts: Creating...[0m[0m
 [0m[1mmodule.database.aws_secretsmanager_secret.db_credentials: Creating...[0m[0m
 [0m[1mmodule.database.aws_db_parameter_group.postgres_dms: Creating...[0m[0m
-[0m[1mmodule.database.aws_secretsmanager_secret.db_credentials: Creation complete after 6s [id=arn:aws:secretsmanager:eu-north-1:524547833379:secret:sabay-bank-dev-db-credentials-gwPJ3X][0m
+[0m[1mmodule.database.aws_secretsmanager_secret.db_credentials: Creation complete after 6s [id=arn:aws:secretsmanager:eu-north-1:<AWS_ACCOUNT_ID>:secret:sabay-bank-dev-db-credentials-<SECRET_ID>][0m
 [0m[1mmodule.monitoring.aws_cloudwatch_log_group.app_logs: Creation complete after 7s [id=/aws/ec2/sabay-bank-dev-core][0m
-[0m[1mmodule.monitoring.aws_sns_topic.alerts: Creation complete after 7s [id=arn:aws:sns:eu-north-1:524547833379:sabay-bank-dev-alerts][0m
+[0m[1mmodule.monitoring.aws_sns_topic.alerts: Creation complete after 7s [id=arn:aws:sns:eu-north-1:<AWS_ACCOUNT_ID>:sabay-bank-dev-alerts][0m
 [0m[1mmodule.monitoring.aws_sns_topic_subscription.email: Creating...[0m[0m
 [0m[1mmodule.compute.aws_iam_role.app_instance_role: Creation complete after 7s [id=sabay-bank-dev-instance-role][0m
 [0m[1mmodule.compute.aws_iam_role_policy_attachment.ssm_core: Creating...[0m[0m
 [0m[1mmodule.compute.aws_iam_instance_profile.app_profile: Creating...[0m[0m
 [0m[1mmodule.database.aws_db_parameter_group.postgres_dms: Creation complete after 7s [id=sabay-bank-dev-pg16-dms-params][0m
-[0m[1mmodule.monitoring.aws_sns_topic_subscription.email: Creation complete after 1s [id=arn:aws:sns:eu-north-1:524547833379:sabay-bank-dev-alerts:f51eefe9-3ec4-4186-a076-cd3fe90ac0b8][0m
+[0m[1mmodule.monitoring.aws_sns_topic_subscription.email: Creation complete after 1s [id=arn:aws:sns:eu-north-1:<AWS_ACCOUNT_ID>:sabay-bank-dev-alerts:<SNS_SUBSCRIPTION_ID>][0m
 [0m[1mmodule.compute.aws_iam_role_policy_attachment.ssm_core: Creation complete after 1s [id=sabay-bank-dev-instance-role-20261107193211525900000003][0m
 [0m[1mmodule.compute.aws_acm_certificate.cert: Still creating... [00m10s elapsed][0m[0m
 [0m[1mmodule.networking.aws_vpc.main: Still creating... [00m10s elapsed][0m[0m
-[0m[1mmodule.compute.aws_acm_certificate.cert: Creation complete after 12s [id=arn:aws:acm:eu-north-1:524547833379:certificate/0e29985c-5382-429e-bd8c-e595d9aeae51][0m
+[0m[1mmodule.compute.aws_acm_certificate.cert: Creation complete after 12s [id=arn:aws:acm:eu-north-1:<AWS_ACCOUNT_ID>:certificate/<ACM_CERT_ID>][0m
 [0m[1mmodule.networking.aws_vpc.main: Creation complete after 15s [id=vpc-003314111ffb0bfd8][0m
 [0m[1mmodule.networking.aws_internet_gateway.gw: Creating...[0m[0m
 [0m[1mmodule.networking.aws_route_table.private: Creating...[0m[0m
@@ -1391,7 +1391,7 @@ Changes to Outputs:
 [0m[1mmodule.networking.aws_db_subnet_group.rds: Creation complete after 2s [id=sabay-bank-dev-rds-subnet-group][0m
 [0m[1mmodule.networking.aws_security_group.app: Creation complete after 4s [id=sg-0d93da2b0679e86c3][0m
 [0m[1mmodule.networking.aws_security_group.db: Creating...[0m[0m
-[0m[1mmodule.compute.aws_lb_target_group.app_tg: Creation complete after 8s [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c][0m
+[0m[1mmodule.compute.aws_lb_target_group.app_tg: Creation complete after 8s [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c][0m
 [0m[1mmodule.networking.aws_subnet.public[1]: Still creating... [00m10s elapsed][0m[0m
 [0m[1mmodule.networking.aws_subnet.public[0]: Still creating... [00m10s elapsed][0m[0m
 [0m[1mmodule.networking.aws_security_group.db: Creation complete after 4s [id=sg-021af7499be5d96a3][0m
@@ -1407,9 +1407,9 @@ Changes to Outputs:
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [00m10s elapsed][0m[0m
 [0m[1mmodule.compute.aws_lb.external: Still creating... [00m10s elapsed][0m[0m
 [0m[1mmodule.compute.aws_instance.app_host: Still creating... [00m10s elapsed][0m[0m
-[0m[1mmodule.compute.aws_instance.app_host: Creation complete after 16s [id=i-0b7a098646a8932b1][0m
+[0m[1mmodule.compute.aws_instance.app_host: Creation complete after 16s [id=<INSTANCE_ID>][0m
 [0m[1mmodule.compute.aws_lb_target_group_attachment.app_attachment: Creating...[0m[0m
-[0m[1mmodule.compute.aws_lb_target_group_attachment.app_attachment: Creation complete after 1s [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c-20261107193249554500000008][0m
+[0m[1mmodule.compute.aws_lb_target_group_attachment.app_attachment: Creation complete after 1s [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c-20261107193249554500000008][0m
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [00m20s elapsed][0m[0m
 [0m[1mmodule.compute.aws_lb.external: Still creating... [00m20s elapsed][0m[0m
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [00m30s elapsed][0m[0m
@@ -1436,7 +1436,7 @@ Changes to Outputs:
 [0m[1mmodule.compute.aws_lb.external: Still creating... [02m10s elapsed][0m[0m
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [02m20s elapsed][0m[0m
 [0m[1mmodule.compute.aws_lb.external: Still creating... [02m20s elapsed][0m[0m
-[0m[1mmodule.compute.aws_lb.external: Creation complete after 2m26s [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:loadbalancer/app/sabay-bank-dev-alb/00a4c946ead8a198][0m
+[0m[1mmodule.compute.aws_lb.external: Creation complete after 2m26s [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:loadbalancer/app/sabay-bank-dev-alb/00a4c946ead8a198][0m
 [0m[1mmodule.compute.aws_lb_listener.https: Creating...[0m[0m
 [0m[1mmodule.monitoring.aws_cloudwatch_metric_alarm.alb_unhealthy: Creating...[0m[0m
 [0m[1mmodule.compute.aws_lb_listener.http: Creating...[0m[0m
@@ -1446,7 +1446,7 @@ Changes to Outputs:
 [0m[1mmodule.monitoring.aws_cloudwatch_metric_alarm.alb_5xx: Creation complete after 6s [id=sabay-bank-dev-high-5xx-errors][0m
 [0m[1mmodule.compute.aws_lb_listener.http: Still creating... [00m10s elapsed][0m[0m
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [02m40s elapsed][0m[0m
-[0m[1mmodule.compute.aws_lb_listener.http: Creation complete after 12s [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m
+[0m[1mmodule.compute.aws_lb_listener.http: Creation complete after 12s [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [02m50s elapsed][0m[0m
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [03m00s elapsed][0m[0m
 [0m[1mmodule.database.aws_db_instance.postgres: Still creating... [03m10s elapsed][0m[0m
@@ -1486,10 +1486,10 @@ Changes to Outputs:
 [0m[1mmodule.database.aws_db_instance.postgres: Creation complete after 8m45s [id=db-3NM3KFL4G3F25M2HXXYQVDDC3M][0m
 [0m[1mmodule.database.aws_secretsmanager_secret_version.db_credentials: Creating...[0m[0m
 [0m[1mmodule.monitoring.aws_cloudwatch_metric_alarm.rds_dropped_connections: Creating...[0m[0m
-[0m[1mmodule.database.aws_secretsmanager_secret_version.db_credentials: Creation complete after 7s [id=arn:aws:secretsmanager:eu-north-1:524547833379:secret:sabay-bank-dev-db-credentials-gwPJ3X|terraform-20261107194117431900000009][0m
+[0m[1mmodule.database.aws_secretsmanager_secret_version.db_credentials: Creation complete after 7s [id=arn:aws:secretsmanager:eu-north-1:<AWS_ACCOUNT_ID>:secret:sabay-bank-dev-db-credentials-<SECRET_ID>|terraform-20261107194117431900000009][0m
 [0m[1mmodule.monitoring.aws_cloudwatch_metric_alarm.rds_dropped_connections: Creation complete after 7s [id=sabay-bank-dev-rds-zero-connections][0m
 [31m╷[0m[0m
-[31m│[0m [0m[1m[31mError: [0m[0m[1mcreating ELBv2 Listener (arn:aws:elasticloadbalancing:eu-north-1:524547833379:loadbalancer/app/sabay-bank-dev-alb/00a4c946ead8a198): operation error Elastic Load Balancing v2: CreateListener, https response error StatusCode: 400, RequestID: 8fc5bc46-ff76-4707-9fdd-fb4f3eefac7a, api error UnsupportedCertificate: The certificate 'arn:aws:acm:eu-north-1:524547833379:certificate/0e29985c-5382-429e-bd8c-e595d9aeae51' must have a fully-qualified domain name, a supported signature, and a supported key size.[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mcreating ELBv2 Listener (arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:loadbalancer/app/sabay-bank-dev-alb/00a4c946ead8a198): operation error Elastic Load Balancing v2: CreateListener, https response error StatusCode: 400, RequestID: 8fc5bc46-ff76-4707-9fdd-fb4f3eefac7a, api error UnsupportedCertificate: The certificate 'arn:aws:acm:eu-north-1:<AWS_ACCOUNT_ID>:certificate/<ACM_CERT_ID>' must have a fully-qualified domain name, a supported signature, and a supported key size.[0m
 [31m│[0m [0m
 [31m│[0m [0m[0m  with module.compute.aws_lb_listener.https,
 [31m│[0m [0m  on ../../modules/compute/main.tf line 200, in resource "aws_lb_listener" "https":

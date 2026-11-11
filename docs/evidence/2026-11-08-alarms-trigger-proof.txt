@@ -1,6 +1,6 @@
 === CLOUDWATCH ALARM TRIGGER & RECOVERY PROOF ===
 Target Alarms: sabay-bank-dev-unhealthy-hosts, sabay-bank-dev-high-5xx-errors
-Fault Injected: docker stop sabay_app on EC2 instance i-0b7a098646a8932b1
+Fault Injected: docker stop sabay_app on EC2 instance <INSTANCE_ID>
 
 Baseline State:
 --------------------------------------------------
@@ -33,5 +33,5 @@ Recovered State (Container Restarted):
 |  sabay-bank-dev-unhealthy-hosts|  Threshold Crossed: 1 datapoint [1.0 (08/11/26 14:32:00)] was greater than or equal to the threshold (1.0).          |  ALARM  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------+---------+
 
-Notification Target: Amazon SNS Topic (arn:aws:sns:eu-north-1:524547833379:sabay-bank-dev-alerts)
+Notification Target: Amazon SNS Topic (arn:aws:sns:eu-north-1:<AWS_ACCOUNT_ID>:sabay-bank-dev-alerts)
 Result: SUCCESS. Fault detected, alarm triggered, and auto-cleared upon container recovery.

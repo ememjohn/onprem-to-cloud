@@ -2,12 +2,12 @@
 [0m[1mmodule.networking.aws_vpc.main: Refreshing state... [id=vpc-003314111ffb0bfd8][0m
 [0m[1mmodule.compute.aws_iam_role.app_instance_role: Refreshing state... [id=sabay-bank-dev-instance-role][0m
 [0m[1mmodule.compute.data.aws_ami.amazon_linux_2023: Reading...[0m[0m
-[0m[1mmodule.monitoring.aws_sns_topic.alerts: Refreshing state... [id=arn:aws:sns:eu-north-1:524547833379:sabay-bank-dev-alerts][0m
+[0m[1mmodule.monitoring.aws_sns_topic.alerts: Refreshing state... [id=arn:aws:sns:eu-north-1:<AWS_ACCOUNT_ID>:sabay-bank-dev-alerts][0m
 [0m[1mmodule.monitoring.aws_cloudwatch_log_group.app_logs: Refreshing state... [id=/aws/ec2/sabay-bank-dev-core][0m
-[0m[1mmodule.database.aws_secretsmanager_secret.db_credentials: Refreshing state... [id=arn:aws:secretsmanager:eu-north-1:524547833379:secret:sabay-bank-dev-db-credentials-gwPJ3X][0m
-[0m[1mmodule.compute.aws_acm_certificate.cert: Refreshing state... [id=arn:aws:acm:eu-north-1:524547833379:certificate/0e29985c-5382-429e-bd8c-e595d9aeae51][0m
+[0m[1mmodule.database.aws_secretsmanager_secret.db_credentials: Refreshing state... [id=arn:aws:secretsmanager:eu-north-1:<AWS_ACCOUNT_ID>:secret:sabay-bank-dev-db-credentials-<SECRET_ID>][0m
+[0m[1mmodule.compute.aws_acm_certificate.cert: Refreshing state... [id=arn:aws:acm:eu-north-1:<AWS_ACCOUNT_ID>:certificate/<ACM_CERT_ID>][0m
 [0m[1mmodule.database.aws_db_parameter_group.postgres_dms: Refreshing state... [id=sabay-bank-dev-pg16-dms-params][0m
-[0m[1mmodule.monitoring.aws_sns_topic_subscription.email: Refreshing state... [id=arn:aws:sns:eu-north-1:524547833379:sabay-bank-dev-alerts:f51eefe9-3ec4-4186-a076-cd3fe90ac0b8][0m
+[0m[1mmodule.monitoring.aws_sns_topic_subscription.email: Refreshing state... [id=arn:aws:sns:eu-north-1:<AWS_ACCOUNT_ID>:sabay-bank-dev-alerts:<SNS_SUBSCRIPTION_ID>][0m
 [0m[1mmodule.compute.data.aws_ami.amazon_linux_2023: Read complete after 7s [id=ami-0516089d963059a51][0m
 [0m[1mmodule.compute.aws_iam_instance_profile.app_profile: Refreshing state... [id=sabay-bank-dev-instance-profile][0m
 [0m[1mmodule.compute.aws_iam_role_policy_attachment.ssm_core: Refreshing state... [id=sabay-bank-dev-instance-role-20261107193211525900000003][0m
@@ -18,7 +18,7 @@
 [0m[1mmodule.networking.aws_internet_gateway.gw: Refreshing state... [id=igw-02da01d910612f167][0m
 [0m[1mmodule.networking.aws_security_group.alb: Refreshing state... [id=sg-0908942fcbb7f7df7][0m
 [0m[1mmodule.networking.aws_subnet.public[0]: Refreshing state... [id=subnet-0c0185aeea2320df4][0m
-[0m[1mmodule.compute.aws_lb_target_group.app_tg: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c][0m
+[0m[1mmodule.compute.aws_lb_target_group.app_tg: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c][0m
 [0m[1mmodule.networking.aws_subnet.isolated_db[1]: Refreshing state... [id=subnet-030ac72c8d97a5130][0m
 [0m[1mmodule.networking.aws_route_table.private: Refreshing state... [id=rtb-0b29e07acf60de19a][0m
 [0m[1mmodule.networking.aws_subnet.isolated_db[0]: Refreshing state... [id=subnet-069002eeac97e1d54][0m
@@ -26,19 +26,19 @@
 [0m[1mmodule.networking.aws_security_group.app: Refreshing state... [id=sg-0d93da2b0679e86c3][0m
 [0m[1mmodule.networking.aws_route_table_association.private_app[1]: Refreshing state... [id=rtbassoc-0f2ff74320a5e8bbc][0m
 [0m[1mmodule.networking.aws_route_table_association.private_app[0]: Refreshing state... [id=rtbassoc-068a828e7c9f70373][0m
-[0m[1mmodule.compute.aws_lb.external: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:loadbalancer/app/sabay-bank-dev-alb/00a4c946ead8a198][0m
+[0m[1mmodule.compute.aws_lb.external: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:loadbalancer/app/sabay-bank-dev-alb/00a4c946ead8a198][0m
 [0m[1mmodule.networking.aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-0e214f6b7ef09621c][0m
 [0m[1mmodule.networking.aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-00bda124afffa757a][0m
 [0m[1mmodule.networking.aws_db_subnet_group.rds: Refreshing state... [id=sabay-bank-dev-rds-subnet-group][0m
 [0m[1mmodule.networking.aws_route_table_association.isolated_db[0]: Refreshing state... [id=rtbassoc-0e4faede3b185bbc2][0m
 [0m[1mmodule.networking.aws_route_table_association.isolated_db[1]: Refreshing state... [id=rtbassoc-0f8ecd13ae6917d6d][0m
 [0m[1mmodule.networking.aws_security_group.db: Refreshing state... [id=sg-021af7499be5d96a3][0m
-[0m[1mmodule.compute.aws_instance.app_host: Refreshing state... [id=i-0b7a098646a8932b1][0m
+[0m[1mmodule.compute.aws_instance.app_host: Refreshing state... [id=<INSTANCE_ID>][0m
 [0m[1mmodule.database.aws_db_instance.postgres: Refreshing state... [id=db-3NM3KFL4G3F25M2HXXYQVDDC3M][0m
-[0m[1mmodule.database.aws_secretsmanager_secret_version.db_credentials: Refreshing state... [id=arn:aws:secretsmanager:eu-north-1:524547833379:secret:sabay-bank-dev-db-credentials-gwPJ3X|terraform-20261107194117431900000009][0m
+[0m[1mmodule.database.aws_secretsmanager_secret_version.db_credentials: Refreshing state... [id=arn:aws:secretsmanager:eu-north-1:<AWS_ACCOUNT_ID>:secret:sabay-bank-dev-db-credentials-<SECRET_ID>|terraform-20261107194117431900000009][0m
 [0m[1mmodule.monitoring.aws_cloudwatch_metric_alarm.rds_dropped_connections: Refreshing state... [id=sabay-bank-dev-rds-zero-connections][0m
-[0m[1mmodule.compute.aws_lb_target_group_attachment.app_attachment: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c-20261107193249554500000008][0m
-[0m[1mmodule.compute.aws_lb_listener.http: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m
+[0m[1mmodule.compute.aws_lb_target_group_attachment.app_attachment: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c-20261107193249554500000008][0m
+[0m[1mmodule.compute.aws_lb_listener.http: Refreshing state... [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m
 [0m[1mmodule.monitoring.aws_cloudwatch_metric_alarm.alb_unhealthy: Refreshing state... [id=sabay-bank-dev-unhealthy-hosts][0m
 [0m[1mmodule.monitoring.aws_cloudwatch_metric_alarm.alb_5xx: Refreshing state... [id=sabay-bank-dev-high-5xx-errors][0m
 
@@ -50,7 +50,7 @@ Terraform will perform the following actions:
 
 [1m  # module.compute.aws_lb_listener.http[0m will be updated in-place
 [0m  [33m~[0m[0m resource "aws_lb_listener" "http" {
-        id                                                                  = "arn:aws:elasticloadbalancing:eu-north-1:524547833379:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109"
+        id                                                                  = "arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109"
       [33m~[0m[0m tags                                                                = {
             "Environment" = "dev"
             "ManagedBy"   = "Terraform"
@@ -63,7 +63,7 @@ Terraform will perform the following actions:
         [90m# (16 unchanged attributes hidden)[0m[0m
 
       [33m~[0m[0m default_action {
-          [32m+[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:eu-north-1:524547833379:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c"
+          [32m+[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:targetgroup/sabay-bank-dev-app-tg/77164a4c3c29499c"
           [33m~[0m[0m type             = "redirect" [33m->[0m[0m "forward"
             [90m# (1 unchanged attribute hidden)[0m[0m
 
@@ -72,8 +72,8 @@ Terraform will perform the following actions:
     }
 
 [1mPlan:[0m [0m0 to add, 1 to change, 0 to destroy.
-[0m[1mmodule.compute.aws_lb_listener.http: Modifying... [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m[0m
-[0m[1mmodule.compute.aws_lb_listener.http: Modifications complete after 2s [id=arn:aws:elasticloadbalancing:eu-north-1:524547833379:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m
+[0m[1mmodule.compute.aws_lb_listener.http: Modifying... [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m[0m
+[0m[1mmodule.compute.aws_lb_listener.http: Modifications complete after 2s [id=arn:aws:elasticloadbalancing:eu-north-1:<AWS_ACCOUNT_ID>:listener/app/sabay-bank-dev-alb/00a4c946ead8a198/38537ded44a85109][0m
 [33m╷[0m[0m
 [33m│[0m [0m[1m[33mWarning: [0m[0m[1mInvalid Attribute Combination[0m
 [33m│[0m [0m
@@ -98,11 +98,11 @@ Outputs:
     "type" = "CNAME"
   }
 }
-alb_dns_name = "sabay-bank-dev-alb-1381219699.eu-north-1.elb.amazonaws.com"
+alb_dns_name = "sabay-bank-dev-alb-<ALB_SUFFIX>.eu-north-1.elb.amazonaws.com"
 alb_security_group_id = "sg-0908942fcbb7f7df7"
 app_security_group_id = "sg-0d93da2b0679e86c3"
-db_endpoint = "sabay-bank-dev-postgres.cti602o8q50n.eu-north-1.rds.amazonaws.com"
-db_secret_arn = "arn:aws:secretsmanager:eu-north-1:524547833379:secret:sabay-bank-dev-db-credentials-gwPJ3X"
+db_endpoint = "sabay-bank-dev-postgres.xxxxxx.eu-north-1.rds.amazonaws.com"
+db_secret_arn = "arn:aws:secretsmanager:eu-north-1:<AWS_ACCOUNT_ID>:secret:sabay-bank-dev-db-credentials-<SECRET_ID>"
 db_security_group_id = "sg-021af7499be5d96a3"
 db_subnet_group_name = "sabay-bank-dev-rds-subnet-group"
 ec2_private_ip = "10.0.1.12"
