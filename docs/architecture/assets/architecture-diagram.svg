@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1018 640" width="1018" height="640" role="img" aria-labelledby="t d">
+<title id="t">Sabay Premium Bank: Hardened Cloud Migration Master Architecture</title>
+<desc id="d">Hardened Architecture: Cloudflare routes bank.saphigen.com to an AWS Application Load Balancer with TLS 1.3 policy and port 80 redirect. Ingress feeds EC2 with IMDSv2 and Amazon EKS microservices. Both connect to isolated Amazon RDS PostgreSQL with verify-full SSL transport. Telemetry plane incorporates CloudWatch alarms, SNS email dispatch, Systems Manager, and Secrets Manager.</desc>
+<style>
+text{font-family:Inter,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+.m{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.nt{font-size:13px;font-weight:600;fill:#0f172a}.ns{font-size:10.5px;fill:#64748b}.bl{font-size:11px;font-weight:600}.lt{font-size:9.5px;fill:#334155}.kt{font-size:10px;fill:#475569}
+.ed{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fl{stroke-dasharray:6 10;animation:d 1s linear infinite}.sl{stroke-dasharray:6 10;animation:d 2.4s linear infinite}
+@keyframes d{to{stroke-dashoffset:-16}}
+@media(prefers-reduced-motion:reduce){.fl,.sl{animation:none}}
+</style>
+<defs>
+<marker id="a01A88D" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#01A88D"/></marker>
+<marker id="a64748B" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#64748B"/></marker>
+<marker id="a8C4FFF" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#8C4FFF"/></marker>
+<marker id="a94A3B8" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#94A3B8"/></marker>
+<marker id="aC925D1" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#C925D1"/></marker>
+<marker id="aDD344C" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#DD344C"/></marker>
+<marker id="aE7157B" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#E7157B"/></marker>
+</defs>
+<rect width="1018" height="640" rx="14" fill="#fff"/>
+
+<!-- Line Key Legend -->
+<rect x="12" y="12" width="188" height="154" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+<text class="bl" x="26" y="33" fill="#334155">Line key</text>
+<path class="ed" d="M26 54H56" stroke="#8C4FFF" stroke-opacity=".3"/><path class="ed fl" d="M26 54H56" stroke="#8C4FFF"/><text class="kt" x="66" y="57.5">Active HTTPS traffic</text>
+<path class="ed" d="M26 74H56" stroke="#C925D1" stroke-opacity=".3"/><path class="ed sl" d="M26 74H56" stroke="#C925D1"/><text class="kt" x="66" y="77.5">Replication &amp; verify-full</text>
+<path class="ed" d="M26 94H56" stroke="#01A88D" stroke-opacity=".3"/><path class="ed sl" d="M26 94H56" stroke="#01A88D"/><text class="kt" x="66" y="97.5">S3 snapshot staging</text>
+<path class="ed" d="M26 114H56" stroke="#DD344C" stroke-opacity=".3"/><path class="ed sl" d="M26 114H56" stroke="#DD344C"/><text class="kt" x="66" y="117.5">Control plane &amp; secrets</text>
+<path class="ed" d="M26 134H56" stroke="#94A3B8" stroke-width="1.6" stroke-dasharray="3 6"/><text class="kt" x="66" y="137.5">Designed standby</text>
+<path class="ed" d="M26 154H56" stroke="#64748B" stroke-width="1.6"/><text class="kt" x="66" y="157.5">Local link</text>
+
+<!-- AWS Service Colors Legend -->
+<rect x="658" y="534" width="348" height="94" rx="12" fill="#F8FAFC" stroke="#E2E8F0"/>
+<text class="bl" x="672" y="556" fill="#334155">AWS service colors</text>
+<rect x="672" y="571" width="12" height="12" rx="3" fill="#ED7100"/><text class="kt" x="690" y="581">Compute</text>
+<rect x="780" y="571" width="12" height="12" rx="3" fill="#8C4FFF"/><text class="kt" x="798" y="581">Networking</text>
+<rect x="888" y="571" width="12" height="12" rx="3" fill="#C925D1"/><text class="kt" x="906" y="581">Database</text>
+<rect x="672" y="595" width="12" height="12" rx="3" fill="#DD344C"/><text class="kt" x="690" y="605">Security</text>
+<rect x="780" y="595" width="12" height="12" rx="3" fill="#E7157B"/><text class="kt" x="798" y="605">Management &amp; SRE</text>
+<rect x="888" y="595" width="12" height="12" rx="3" fill="#64748B"/><text class="kt" x="906" y="605">On-premises</text>
+
+<!-- Boundaries -->
+<rect x="216" y="80" width="542" height="426" rx="16" fill="none" fill-opacity=".06" stroke="#147EBA" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text class="bl" x="230" y="100" fill="#147EBA">Primary region, eu-north-1 Stockholm (Custom VPC)</text>
+
+<rect x="782" y="80" width="224" height="426" rx="16" fill="none" fill-opacity=".06" stroke="#147EBA" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text class="bl" x="796" y="100" fill="#147EBA">Designed DR region, eu-west-1 Ireland</text>
+
+<rect x="12" y="208" width="188" height="298" rx="16" fill="none" fill-opacity=".06" stroke="#64748B" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text class="bl" x="26" y="228" fill="#64748B">Source bank data center</text>
+
+<!-- Subnet Tiers -->
+<rect x="228" y="106" width="518" height="88" rx="12" fill="#7AA116" fill-opacity=".06" stroke="#7AA116" stroke-opacity="0.55" stroke-width="1.2"/>
+<text class="bl" x="242" y="124" fill="#7AA116">Public ingress subnets (Dual AZ)</text>
+
+<rect x="228" y="208" width="518" height="152" rx="12" fill="#147EBA" fill-opacity=".06" stroke="#147EBA" stroke-opacity="0.55" stroke-width="1.2"/>
+<text class="bl" x="242" y="226" fill="#147EBA">Private compute subnets (Dual AZ)</text>
+
+<rect x="228" y="374" width="518" height="120" rx="12" fill="#C925D1" fill-opacity=".06" stroke="#C925D1" stroke-opacity="0.55" stroke-width="1.2"/>
+<text class="bl" x="734" y="482" text-anchor="end" fill="#C925D1">Isolated DB subnets (Single-AZ, Multi-AZ Subnet Group, No Internet Route)</text>
+
+<rect x="12" y="534" width="630" height="94" rx="12" fill="#E7157B" fill-opacity=".06" stroke="#E7157B" stroke-opacity="0.55" stroke-width="1.2"/>
+<text class="bl" x="26" y="552" fill="#E7157B">Security, secrets, and SRE alerting plane</text>
+
+<!-- Paths and Traffic Arrows -->
+<g><path class="ed" d="M410 36H476" stroke="#8C4FFF" stroke-opacity=".3" marker-end="url(#a8C4FFF)"/><path class="ed fl" d="M410 36H476" stroke="#8C4FFF"/><rect x="424" y="27" width="38" height="18" rx="9" fill="#fff" stroke="#8C4FFF" stroke-opacity=".55"/><text class="m lt" x="443" y="39.3" text-anchor="middle">HTTPS</text></g>
+<g><path class="ed" d="M570 62V130" stroke="#8C4FFF" stroke-opacity=".3" marker-end="url(#a8C4FFF)"/><path class="ed fl" d="M570 62V130" stroke="#8C4FFF"/><rect x="526" y="83" width="88" height="18" rx="9" fill="#fff" stroke="#8C4FFF" stroke-opacity=".55"/><text class="m lt" x="570" y="95.3" text-anchor="middle">CNAME Route</text></g>
+
+<g><path class="ed" d="M496 182V202H340V260" stroke="#8C4FFF" stroke-opacity=".3" marker-end="url(#a8C4FFF)"/><path class="ed fl" d="M496 182V202H340V260" stroke="#8C4FFF"/><rect x="390" y="193" width="60" height="18" rx="9" fill="#fff" stroke="#8C4FFF" stroke-opacity=".55"/><text class="m lt" x="420" y="205.3" text-anchor="middle">Port 8000</text></g>
+
+<g><path class="ed" d="M626 182V234" stroke="#8C4FFF" stroke-opacity=".3" marker-end="url(#a8C4FFF)"/><path class="ed fl" d="M626 182V234" stroke="#8C4FFF"/><rect x="600" y="193" width="52" height="18" rx="9" fill="#fff" stroke="#8C4FFF" stroke-opacity=".55"/><text class="m lt" x="626" y="205.3" text-anchor="middle">/api/v1</text></g>
+
+<g><path class="ed" d="M340 312V394" stroke="#C925D1" stroke-opacity=".3" marker-end="url(#aC925D1)"/><path class="ed fl" d="M340 312V394" stroke="#C925D1"/><rect x="290" y="348" width="100" height="18" rx="9" fill="#fff" stroke="#C925D1" stroke-opacity=".55"/><text class="m lt" x="340" y="360.3" text-anchor="middle">5432 verify-full</text></g>
+
+<g><path class="ed" d="M626 326V365H520V394" stroke="#C925D1" stroke-opacity=".3" marker-end="url(#aC925D1)"/><path class="ed fl" d="M626 326V365H520V394" stroke="#C925D1"/><rect x="470" y="367" width="100" height="18" rx="9" fill="#fff" stroke="#C925D1" stroke-opacity=".55"/><text class="m lt" x="520" y="379.3" text-anchor="middle">5432 verify-full</text></g>
+
+<g><path class="ed" d="M190 418H380" stroke="#01A88D" stroke-opacity=".3" marker-end="url(#a01A88D)"/><path class="ed sl" d="M190 418H380" stroke="#01A88D"/><rect x="210" y="409" width="112" height="18" rx="9" fill="#fff" stroke="#01A88D" stroke-opacity=".55"/><text class="m lt" x="266" y="421.3" text-anchor="middle">S3 presigned pipe</text></g>
+
+<g><path class="ed" d="M602 418H794" stroke="#94A3B8" stroke-width="1.6" stroke-dasharray="3 6" marker-end="url(#a94A3B8)"/><rect x="634" y="409" width="124" height="18" rx="9" fill="#fff" stroke="#94A3B8" stroke-opacity=".55"/><text class="m lt" x="696" y="421.3" text-anchor="middle">Designed WAL stream</text></g>
+
+<!-- Components -->
+<g transform="translate(234 10)"><title>Public client traffic.</title><rect width="176" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#475569"/><path d="M4 5h16v11H4zM9 20h6M12 16v4" transform="translate(17.6 17.6) scale(0.7)" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="nt" x="50" y="24">Clients</text><text class="ns" x="50" y="40">Public + Interbank</text></g>
+
+<g transform="translate(476 10)"><title>Cloudflare Authoritative DNS for bank.saphigen.com.</title><rect width="186" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#F38020"/><path d="M12 3v18M12 6h6l2 2-2 2h-6M12 12H6l-2 2 2 2h6" transform="translate(17.6 17.6) scale(0.7)" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="nt" x="50" y="24">Cloudflare DNS</text><text class="ns" x="50" y="40">bank.saphigen.com</text></g>
+
+<g transform="translate(460 130)"><title>Application Load Balancer: Port 443 with TLS 1.3 policy and Port 80 redirect.</title><rect width="210" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#8C4FFF"/><path d="M12 4v6M12 10 5 17M12 10l7 7M12 10v7M3.5 17.5h3v3h-3zM10.5 17.5h3v3h-3zM17.5 17.5h3v3h-3z" transform="translate(17.6 17.6) scale(0.7)" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="nt" x="50" y="24">Public ALB (Dual AZ)</text><text class="ns" x="50" y="40">443 TLS 1.3 | 80 Redirect</text><rect x="140" y="-9" width="62" height="18" rx="9" fill="#FDF2F8" stroke="#E7157B" stroke-opacity=".6"/><text class="m" x="171" y="3.3" text-anchor="middle" font-size="9.5" fill="#BE185D">5XX alarm</text></g>
+
+<g transform="translate(240 260)"><title>EC2 Compute Host: Amazon Linux 2023 with IMDSv2 token enforcement.</title><rect width="180" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#ED7100"/><path d="M7 7h10v10H7zM10 10h4v4h-4zM9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4" transform="translate(17.6 17.6) scale(0.7)" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="nt" x="50" y="24">EC2 (IMDSv2)</text><text class="ns" x="50" y="40">Zero SSH Port 22</text></g>
+
+<g transform="translate(434 234)"><title>Designed EKS Cluster with Microservices.</title><rect width="300" height="104" rx="10" fill="#FFF8F1" stroke="#ED7100" stroke-dasharray="4 4"/><text class="nt" x="48" y="20">EKS (Designed)</text><text class="ns" x="48" y="34">Microservices Cluster</text></g>
+<g transform="translate(446 280)"><rect width="134" height="46" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="9" y="10" width="26" height="26" rx="7" fill="#ED7100"/><text class="nt" x="45" y="21">Account KYC</text><text class="ns m" x="45" y="36">:8001</text></g>
+<g transform="translate(590 280)"><rect width="134" height="46" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="9" y="10" width="26" height="26" rx="7" fill="#ED7100"/><text class="nt" x="45" y="21">Settlement</text><text class="ns m" x="45" y="36">:8002 HPA</text></g>
+
+<g transform="translate(380 394)"><title>Amazon RDS PostgreSQL 16.10: Single AZ instance in multi-AZ subnet group, force_ssl enforced.</title><rect width="222" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#C925D1"/><path d="M5 6c0-1.7 3.1-3 7-3s7 1.3 7 3-3.1 3-7 3-7-1.3-7-3zM5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3" transform="translate(17.6 17.6) scale(0.7)" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text class="nt" x="50" y="24">RDS PostgreSQL 16.10</text><text class="ns" x="50" y="40">Single AZ, KMS Encrypted</text><rect x="8" y="43" width="72" height="18" rx="9" fill="#FDF2F8" stroke="#E7157B" stroke-opacity=".6"/><text class="m" x="44" y="55.3" text-anchor="middle" font-size="9.5" fill="#BE185D">conn alarm</text></g>
+
+<!-- Governance & SRE Plane -->
+<g transform="translate(24 566)"><title>AWS Systems Manager.</title><rect width="140" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="10" y="12" width="26" height="26" rx="7" fill="#E7157B"/><text class="nt" x="42" y="24">Systems Mgr</text><text class="ns" x="42" y="40">No Port 22</text></g>
+<g transform="translate(176 566)"><title>AWS Secrets Manager.</title><rect width="140" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="10" y="12" width="26" height="26" rx="7" fill="#DD344C"/><text class="nt" x="42" y="24">Secrets Mgr</text><text class="ns" x="42" y="40">KMS Encrypted</text></g>
+<g transform="translate(328 566)"><title>Amazon CloudWatch.</title><rect width="140" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="10" y="12" width="26" height="26" rx="7" fill="#E7157B"/><text class="nt" x="42" y="24">CloudWatch</text><text class="ns" x="42" y="40">3 Alarms Active</text></g>
+<g transform="translate(480 566)"><title>Amazon SNS Alerts.</title><rect width="150" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="10" y="12" width="26" height="26" rx="7" fill="#ED7100"/><text class="nt" x="42" y="24">SNS Alerting</text><text class="ns" x="42" y="40">Email Dispatch</text></g>
+
+<!-- On-Premises Data Center -->
+<g transform="translate(22 260)"><rect width="168" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#64748B"/><text class="nt" x="50" y="24">FastAPI Ledger</text><text class="ns" x="50" y="40">Monolith</text></g>
+<g transform="translate(22 394)"><rect width="168" height="52" rx="10" fill="#fff" stroke="#CBD5E1"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#64748B"/><text class="nt" x="50" y="24">PostgreSQL 16</text><text class="ns" x="50" y="40">Local Volume</text></g>
+<path class="ed" d="M106 312V394" stroke="#64748B" stroke-width="1.6" marker-end="url(#a64748B)"/>
+
+<!-- Secondary DR Region (Ireland) -->
+<g transform="translate(794 130)"><rect width="200" height="52" rx="10" fill="#fff" stroke="#CBD5E1" stroke-dasharray="4 4"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#8C4FFF"/><text class="nt" x="50" y="24">Standby ALB</text><text class="ns" x="50" y="40">Designed</text></g>
+<g transform="translate(794 260)"><rect width="200" height="52" rx="10" fill="#fff" stroke="#CBD5E1" stroke-dasharray="4 4"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#ED7100"/><text class="nt" x="50" y="24">Pilot-Light Compute</text><text class="ns" x="50" y="40">Designed</text></g>
+<g transform="translate(794 394)"><rect width="200" height="52" rx="10" fill="#fff" stroke="#CBD5E1" stroke-dasharray="4 4"/><rect x="12" y="12" width="28" height="28" rx="7" fill="#C925D1"/><text class="nt" x="50" y="24">RDS Read Replica</text><text class="ns" x="50" y="40">Designed (Blocked by SCP)</text></g>
+</svg>
