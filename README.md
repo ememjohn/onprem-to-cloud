@@ -5,25 +5,94 @@ Sabay Premium Bank migrated its core transaction ledger from an on premises Linu
 ## Architecture Blueprint
 
 ```mermaid
-flowchart TD
-    Client[Public Web Traffic] -->|DNS Resolution| Cloudflare[Cloudflare DNS: bank.saphigen.com]
-    Cloudflare -->|HTTPS Port 443| ALB[Application Load Balancer: Dual AZ]
-    ALB -.->|HTTP Port 80 Redirect| ALB
-    ALB -->|Forward Target Group Port 8000| EC2[EC2 Compute: Amazon Linux 2023]
-    EC2 -->|Socket Port 5432: verify-full SSL| RDS[(Amazon RDS PostgreSQL 16.10)]
-    
-    subgraph Observability_and_Security [Observability and Security Layer]
-        SSM[AWS Systems Manager: Zero Port 22 Access]
-        Alarms[CloudWatch Alarms: 5XX Errors, Unhealthy Hosts, Connection Drops]
-        SNS[Amazon SNS Topic: Email Alerting]
-        Alarms --> SNS
-    end
-    
-    SSM -.->|Encrypted Channel| EC2
-    EC2 -.->|Runtime Logs| Alarms
-```
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'Arial, Helvetica, sans-serif','fontSize':'13px','lineColor':'#475569','primaryTextColor':'#0F172A','clusterBkg':'#F8FAFC','clusterBorder':'#CBD5E1'},'flowchart':{'curve':'linear','nodeSpacing':40,'rankSpacing':60,'padding':16}}}%%
+flowchart TB
+  users(["<b>Users</b><br/>bank.saphigen.com"])
+  dns["<b>Cloudflare DNS</b><br/>CNAME to ALB"]
 
-*(Note: To display your custom high resolution architecture graphic here, save your diagram image to `docs/assets/architecture-diagram.png`)*
+  subgraph src["Source data center · Ubuntu 24.04"]
+    direction TB
+    app["<b>FastAPI ledger</b><br/>Docker · port 8000"]
+    sdb[("<b>PostgreSQL 16</b><br/>100,000 records")]
+    app --> sdb
+  end
+
+  s3["<b>Amazon S3</b><br/>Presigned URL transfer"]
+
+  subgraph aws["AWS eu-north-1 · Stockholm · VPC 10.0.0.0/16"]
+    direction TB
+    subgraph pub["Public subnets · 2 AZ"]
+      igw["<b>Internet Gateway</b>"]
+      alb["<b>Application Load Balancer</b><br/>TLS 1.3 · HTTP 301 to HTTPS"]
+    end
+    subgraph apt["Private application subnets"]
+      ec2["<b>Amazon EC2</b><br/>t3.small · IMDSv2 · no port 22"]
+      eks["<b>Amazon EKS</b><br/>account-service · settlement-service<br/>designed"]
+    end
+    subgraph dbt["Isolated database subnets"]
+      rds[("<b>Amazon RDS PostgreSQL 16.10</b><br/>KMS encrypted · TLS verify-full<br/>PITR enabled")]
+    end
+  end
+
+  subgraph dr["AWS eu-west-1 · Ireland · designed pilot light"]
+    direction TB
+    ralb["<b>Standby ALB</b>"]
+    pilot["<b>Pilot light compute</b><br/>RTO under 15 min"]
+    replica[("<b>RDS read replica</b><br/>async WAL")]
+  end
+
+  subgraph gov["Security and observability"]
+    direction LR
+    ssm["<b>Systems Manager</b><br/>Session Manager"]
+    sm["<b>Secrets Manager</b><br/>db-credentials"]
+    kms["<b>AWS KMS</b><br/>encryption at rest"]
+    cw["<b>CloudWatch</b><br/>5XX · unhealthy host · DB alarms"]
+    sns["<b>Amazon SNS</b><br/>alerts topic"]
+    mail(["<b>Email</b><br/>subscriber"])
+  end
+
+  users -->|DNS lookup| dns
+  users -->|HTTPS 443| igw
+  dns -.->|CNAME| alb
+  igw --> alb
+  alb -->|8000| ec2
+  alb -.->|api/v1| eks
+  ec2 -->|5432 TLS| rds
+  eks -.->|5432 TLS| rds
+
+  sdb ==>|pg_dump| s3
+  s3 ==>|pg_restore| rds
+
+  rds -.->|async WAL| replica
+  ralb -.-> pilot
+  pilot -.-> replica
+
+  ssm --> ec2
+  sm --> ec2
+  kms --> rds
+  cw --> alb
+  cw --> rds
+  cw --> sns
+  sns --> mail
+
+  classDef net fill:#EDE7FF,stroke:#8C4FFF,stroke-width:1.5px,color:#1E1B4B
+  classDef comp fill:#FFF1E6,stroke:#ED7100,stroke-width:1.5px,color:#431407
+  classDef data fill:#FBE8FC,stroke:#C925D1,stroke-width:1.5px,color:#4A044E
+  classDef sec fill:#FDE8EB,stroke:#DD344C,stroke-width:1.5px,color:#4C0519
+  classDef ops fill:#FDE7F1,stroke:#E7157B,stroke-width:1.5px,color:#500724
+  classDef store fill:#F0F7DB,stroke:#7AA116,stroke-width:1.5px,color:#1A2E05
+  classDef ext fill:#F1F5F9,stroke:#64748B,stroke-width:1.5px,color:#0F172A
+  classDef standby fill:#FFFFFF,stroke:#94A3B8,stroke-width:1.5px,stroke-dasharray:5 4,color:#475569
+
+  class users,dns,app,sdb,mail ext
+  class igw,alb net
+  class ec2,eks comp
+  class rds data
+  class s3 store
+  class sm,kms sec
+  class ssm,cw,sns ops
+  class ralb,pilot,replica standby
+```
 
 ## Engineering Implementation Status
 
