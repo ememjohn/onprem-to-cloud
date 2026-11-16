@@ -2,6 +2,9 @@
 
 Sabay Premium Bank migrated its core transaction ledger from an on premises Linux server to Amazon Web Services in Stockholm (eu-north-1). The project established a three tier VPC using HashiCorp Terraform, replatformed relational persistence to Amazon RDS PostgreSQL 16.10 with enforced TLS transport encryption, locked down compute access using AWS Systems Manager with zero open SSH ports, and executed a 100,000 row scale migration benchmark with automated rollback verification.
 
+## System Design
+<img width="3200" height="2000" alt="architecture" src="https://github.com/user-attachments/assets/5c5b5247-5547-4aca-baf9-30a8e2c61ff1" />
+
 ## Engineering Implementation Status
 
 | System Capability | Implementation Scope | Verification Status | Primary Evidence Source |
