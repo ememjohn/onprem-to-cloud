@@ -5,29 +5,8 @@ This document provides an engineering feasibility evaluation of AWS Application 
 
 ## 2. AWS MGN Architectural Topology Model
 
-```mermaid
-graph LR
-    subgraph On_Premises_Datacenter [On Premises Source Host]
-        SourceKernel[Linux Host Kernel: Block Device /dev/sda]
-        Agent[AWS MGN Replication Agent]
-        SourceKernel --> Agent
-    end
+<img width="2880" height="1120" alt="architecture-mgn" src="https://github.com/user-attachments/assets/d498621a-a3b7-4382-a845-42ae155ada70" />
 
-    subgraph AWS_VPC [Target AWS VPC Primary Region (Stockholm)]
-        subgraph Staging_Subnet [Dedicated MGN Staging Subnet]
-            RepServer[Lightweight Replication Server: t3.small]
-            StagingEBS[(EBS Staging Disks: 1-to-1 Mirror)]
-            RepServer --> StagingEBS
-        end
-
-        subgraph Production_Subnet [Target Production Subnet]
-            CutoverInstance[Target EC2 Instance launched from Snapshot]
-        end
-    end
-
-    Agent -->|Outbound TCP Port 1500: Block Level I/O| RepServer
-    StagingEBS -.->|EBS Snapshot at Cutover| CutoverInstance
-```
 
 ## 3. Technical Prerequisites for AWS MGN Deployment
 | Operational Requirement | Technical Specification | Compliance Status |
