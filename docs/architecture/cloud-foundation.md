@@ -5,37 +5,8 @@ This document establishes the foundational networking architecture deployed in A
 
 ## Network Topology Model
 
-```mermaid
-graph TD
-    Internet[Public Internet: 0.0.0.0/0] --> IGW[AWS Internet Gateway]
+<img width="2880" height="1720" alt="network-vpc" src="https://github.com/user-attachments/assets/a7ddee7d-1f30-4f61-8341-17fe8dc64cb5" />
 
-    subgraph AWS_VPC [VPC: Private VPC Network]
-        subgraph Public_Tier [Public Ingress Subnet Tier: Dual AZ]
-            PubSub1[Public Subnet 1: Public Ingress Zone A in us-east-1a]
-            PubSub2[Public Subnet 2: Public Ingress Zone B in us-east-1b]
-            ALB_SG[Security Group: alb-sg - Ingress: 80, 443]
-        end
-
-        subgraph Private_App_Tier [Private Application Subnet Tier: Compute]
-            AppSub1[Private App Subnet 1: Private Compute Zone A in us-east-1a]
-            AppSub2[Private App Subnet 2: Private Compute Zone B in us-east-1b]
-            App_SG[Security Group: app-sg - Ingress: Port 8000 strictly from alb-sg]
-        end
-
-        subgraph Isolated_DB_Tier [Isolated Database Subnet Tier: Persistence]
-            DBSub1[Isolated DB Subnet 1: Isolated Database Zone A in us-east-1a]
-            DBSub2[Isolated DB Subnet 2: Isolated Database Zone B in us-east-1b]
-            DB_SG[Security Group: db-sg - Ingress: Port 5432 strictly from app-sg]
-            DBSubGroup[RDS DB Subnet Group: Dual AZ Persistence]
-        end
-    end
-
-    IGW --> PubSub1
-    IGW --> PubSub2
-    PubSub1 --> AppSub1
-    PubSub2 --> AppSub2
-    AppSub1 --> DBSub1
-    AppSub2 --> DBSub2
 ```
 
 ## Subnet Allocation and Routing Matrix
