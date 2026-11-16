@@ -12,33 +12,7 @@ This document establishes the technical assessment and cloud replatforming desig
 | Seed Data and Tables | Relational Storage | Stateful | Amazon RDS Multi AZ Storage | Synchronized via AWS Database Migration Service |
 | Local Disk Backups | Archival Storage | Stateful Artifacts | Amazon S3 Storage Bucket | Durability increased to eleven nines with versioning |
 
-```mermaid
-graph TD
-    ClientTraffic[Client HTTPS Traffic] --> InternetGW[AWS Internet Gateway]
-    InternetGW --> ALB[Application Load Balancer: Public Subnets AZ-1 / AZ-2]
-
-    subgraph AWS_VPC [Custom AWS VPC: Private VPC Network]
-        subgraph Public_Tier [Public Ingress Subnet Tier]
-            ALB
-        end
-
-        subgraph Private_App_Tier [Private Application Subnet Tier: Zero Public IPs]
-            EC2_App[Amazon EC2: FastAPI Monolith on Port 8000]
-        end
-
-        subgraph Isolated_Data_Tier [Isolated Database Subnet Tier: No Internet Route]
-            RDS_DB[(Amazon RDS PostgreSQL 16: Primary DB)]
-        end
-
-        subgraph Migration_Pipeline [Data Replication Subsystem]
-            DMS[AWS Database Migration Service: Replication Instance]
-        end
-    end
-
-    ALB -->|Forward Ingress Traffic: Port 8000| EC2_App
-    EC2_App -->|Private Connection Pool: Port 5432| RDS_DB
-    DMS -.->|Logical CDC Replication: Port 5432| RDS_DB
-```
+<img width="2880" height="1440" alt="architecture-3tier" src="https://github.com/user-attachments/assets/36575432-add6-426f-b5f6-9e80d1e887b0" />
 
 ## 3. Recovery and Availability Objectives
 | Operational Metric | Business Tolerance | Target AWS Engineering Objective | Validation Mechanism |
